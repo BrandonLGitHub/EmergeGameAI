@@ -91,6 +91,7 @@ def move_possibility(move_set):
 
 
 #   STAGE2
+#   rolls the dice available minus the amount of dice saved from the previous turn
 def roll_dice(dice_amt, saved_dice):
     # saves the values of the dice rolled by the computer
     dice_rolled = []
@@ -118,7 +119,13 @@ def game_play(current_board):
     weights = weigh_moves(current_board)
     return current_board
 
-def dice_budget()
+
+#   takes the dice roll and totals up the amount of each feature can be purchased from the dice in hand
+def dice_budget(current_board):
+    modifiers = current_board['modifiers']
+    dice_hand = current_board['roll_result']
+    return budget
+
 
 #   takes all possible moves and determines the point values associated with them
 def weigh_moves(current_board):
@@ -141,7 +148,7 @@ def weigh_moves(current_board):
     return island_weights
 
 
-#  takes the pieces currently on the board and determines what moves can be made.
+#   takes the pieces currently on the board and determines what moves can be made.
 def check_moves(current_board):
     islands = current_board['islands']
     move_set = {}
@@ -150,7 +157,7 @@ def check_moves(current_board):
         move_set[island] = {'Plants': get_plant(features), 'Crab': get_crab(features),
                             'Turtle': get_turtle(features), 'Seal': get_seal(features),
                             'Tectonic': get_tectonic(features),
-                            'Bird': get_bird(features, current_board)}
+                            'Bird': get_bird(features)}
     return move_set
 
 
@@ -210,7 +217,9 @@ def get_score(current_board):
 def island_score(island):
     score = 0
     inhabitants = ['Plants', 'Crab', 'Turtle', 'Seal', 'Bird']
+    #   sums all the inhabitants on the island and then multiplies by the level of tectonics
     score += (sum(island[key] for key in inhabitants) * island['Tectonic'])
+    #   includes the "biodiversity" point bonus for having all animals except birds on your island
     if island['Seal'] == 1:
         score += 3
     return score
