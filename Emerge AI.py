@@ -123,7 +123,22 @@ def game_play(current_board):
 #   takes the dice roll and totals up the amount of each feature can be purchased from the dice in hand
 def dice_budget(current_board):
     modifiers = current_board['modifiers']
+    print(modifiers)
     dice_hand = current_board['roll_result']
+    budget = {'Plants': 0, 'Crab': 0, 'Turtle': 0, 'Seal': 0, 'Tectonic': 0, 'Bird': 0,
+              'Dice': current_board['dice_amt']}
+    #   goes through all features and its related values
+    for feature, values in modifiers.items():
+        print(f'Feature: {feature}')
+        #   looks at all the numbers from the roll
+        for number in dice_hand:
+            print(f'Number: {number}')
+            # checks the roll against all the current number from the roll
+            for value in values:
+                print(f'Value:{value}')
+                # if the number and value match, increase that features budget by 1
+                if number == value:
+                    budget[feature] += 1
     return budget
 
 
