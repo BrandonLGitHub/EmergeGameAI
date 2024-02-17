@@ -5,7 +5,7 @@ import copy
 def game_runner():
     current_board = {
         #   initial modifier set up
-        'modifiers': {'Plant': [1], 'Crab': [2], 'Turtle': [3], 'Seal': [4], 'Tectonic': [5], 'Bird': [6]},
+        'modifiers': {'Plants': [1], 'Crab': [2], 'Turtle': [3], 'Seal': [4], 'Tectonic': [5], 'Bird': [6]},
         #   initial island settings
         'islands': {
             1: {'Plants': 1, 'Crab': 0, 'Turtle': 0, 'Seal': 0, 'Tectonic': 1, 'Bird': 0},
@@ -26,7 +26,7 @@ def game_runner():
         # sets dice based off of round number subtracted by dice saved from last round
         current_board['dice_amt'] = dice_count(current_board['round']) - len(current_board['saved_dice'])
         current_board['roll_result'] = roll_dice(current_board['dice_amt'], current_board['saved_dice'])
-        current_board = game_play(current_board)
+        current_board['islands'] = spend_dice(current_board)
         print(f'End of round {current_board["round"]}')
 
 
@@ -37,7 +37,7 @@ def game_runner():
 def set_modifiers(current_board):
     current_modifiers = copy.copy(current_board['modifiers'])
     #   default modifiers set to be changed to represent the next modifier configuration
-    default_modifiers = {'Plant': [1], 'Crab': [2], 'Turtle': [3], 'Seal': [4], 'Tectonic': [5], 'Bird': [6]}
+    default_modifiers = {'Plants': [1], 'Crab': [2], 'Turtle': [3], 'Seal': [4], 'Tectonic': [5], 'Bird': [6]}
     new_modifiers = copy.copy(default_modifiers)
     weights = weigh_moves(current_board)
     move_set = check_moves(current_board)
@@ -115,27 +115,25 @@ def dice_count(round_num):
 
 #   STAGE3
 #   Makes turn decisions based off available moves
-def game_play(current_board):
+def spend_dice(current_board):
     weights = weigh_moves(current_board)
-    return current_board
+    possible_moves = check_moves(current_board)
+    budget = dice_budget(current_board)
+    return current_board['islands']
 
 
 #   takes the dice roll and totals up the amount of each feature can be purchased from the dice in hand
 def dice_budget(current_board):
     modifiers = current_board['modifiers']
-    print(modifiers)
     dice_hand = current_board['roll_result']
     budget = {'Plants': 0, 'Crab': 0, 'Turtle': 0, 'Seal': 0, 'Tectonic': 0, 'Bird': 0,
               'Dice': current_board['dice_amt']}
     #   goes through all features and its related values
     for feature, values in modifiers.items():
-        print(f'Feature: {feature}')
         #   looks at all the numbers from the roll
         for number in dice_hand:
-            print(f'Number: {number}')
             # checks the roll against all the current number from the roll
             for value in values:
-                print(f'Value:{value}')
                 # if the number and value match, increase that features budget by 1
                 if number == value:
                     budget[feature] += 1
@@ -163,7 +161,7 @@ def weigh_moves(current_board):
     return island_weights
 
 
-#   takes the pieces currently on the board and determines what moves can be made.
+#   takes the pieces currently on the board and determines what moves can be made on each island.
 def check_moves(current_board):
     islands = current_board['islands']
     move_set = {}
