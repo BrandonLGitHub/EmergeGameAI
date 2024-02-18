@@ -13,6 +13,7 @@ def game_runner():
             3: {'Plants': 3, 'Crab': 1, 'Turtle': 0, 'Seal': 0, 'Tectonic': 2, 'Bird': 0},
             4: {'Plants': 2, 'Crab': 1, 'Turtle': 1, 'Seal': 0, 'Tectonic': 1, 'Bird': 1},
         },
+        'land_birds': 4,
         'score': 0,
         'round': 0,
         'dice_amt': 6,
@@ -56,19 +57,16 @@ def set_modifiers(current_board):
     # find the two highest weights and their corresponding keys
     sorted_weights = sorted(all_weights.items(), key=lambda x: x[1], reverse=True)
     chosen_modifiers = list(dict(sorted_weights[:2]).keys())
-    print(f'Chosen modifiers: {chosen_modifiers}\nReplacement modifiers: {replace_modifiers}')
 
     count = -1
     for feature in chosen_modifiers:
         count += 1
-        print(current_modifiers[feature])
         if len(current_modifiers[feature]) < 2:
             dice_number = default_modifiers[replace_modifiers[count]]
             dice_number = dice_number[0]
             print(dice_number)
             new_modifiers[replace_modifiers[count]] = []
             new_modifiers[feature].append(dice_number)
-    print(f'The new modifiers are {new_modifiers}')
     return current_modifiers
 
 
@@ -117,9 +115,36 @@ def dice_count(round_num):
 #   Makes turn decisions based off available moves
 def spend_dice(current_board):
     weights = weigh_moves(current_board)
-    possible_moves = check_moves(current_board)
     budget = dice_budget(current_board)
     return current_board['islands']
+
+
+#   checks the islands and research tokens to determine the cost of a feature
+def check_cost(feature, island, current_board):
+    cost = use_token(current_board, feature)
+    fxd_prices = {'Crab': 2, 'Turtle': 3, 'Seal': 4}
+    if cost is None:
+        if feature == 'Plants':
+            plant_prices = {0: 1, 1: 2, 2: 3}
+            total = current_board['islands'][island]['Plants']
+            cost = plant_prices[total]
+        elif feature == 'Tectonic':
+            tec_prices = {0: 2, 1: 3, 2: 4}
+            total = current_board['islands'][island]['Tectonic']
+            cost = tec_prices[total]
+        elif feature == 'Bird':
+            if current_board['land_birds'] > 0:
+                cost = 2
+            else:
+                cost = 3
+        else:
+            cost = fxd_prices[feature]
+    return cost
+
+
+#   checks research tokens to see if they are usable for this round
+def use_token(current_board, feature=None):
+    return None
 
 
 #   takes the dice roll and totals up the amount of each feature can be purchased from the dice in hand
