@@ -45,7 +45,7 @@ def set_modifiers(current_board):
     #   stores each move and the amount of times it occurs as not possible for each island
     move_possibilities = move_possibility(move_set)
 
-    #   finds the move that is the least likely and most likely to be playable and their corresponding keys
+    #   finds the two moves that are the least likely to be playable and their corresponding keys
     unlikely_moves = sorted(move_possibilities.items(), key=lambda x: x[1], reverse=True)
     replace_modifiers = list(dict(unlikely_moves[:2]).keys())
 
@@ -121,22 +121,29 @@ def spend_dice(current_board):
 
 #   checks the islands and research tokens to determine the cost of a feature
 def check_cost(feature, island, current_board):
+    #   checks to see if there is a research token that would change the price
     cost = use_token(current_board, feature)
+    #   dictionary establishing the price of features that do no change based off board status
     fxd_prices = {'Crab': 2, 'Turtle': 3, 'Seal': 4}
+    #   checks the price if there was no token applicable
     if cost is None:
+        #   determines the price of plants based off the amount on the island
         if feature == 'Plants':
             plant_prices = {0: 1, 1: 2, 2: 3}
             total = current_board['islands'][island]['Plants']
             cost = plant_prices[total]
+        #   determines the price of a tectonic upgrade based off the island's current size
         elif feature == 'Tectonic':
             tec_prices = {0: 2, 1: 3, 2: 4}
             total = current_board['islands'][island]['Tectonic']
             cost = tec_prices[total]
+        #   checks to see if there are bird on the mainland to determine the price
         elif feature == 'Bird':
             if current_board['land_birds'] > 0:
                 cost = 2
             else:
                 cost = 3
+        #   if the feature is not a variable priced feature, selects the feature and its price from the dictionary
         else:
             cost = fxd_prices[feature]
     return cost
