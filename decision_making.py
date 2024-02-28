@@ -1,7 +1,7 @@
 import copy
 from dice_functions import dice_budget
 from scoring import island_score
-from typing import List
+from typing import List, Dict, Any
 
 
 #   sets the modifiers to the feature that will give you the highest point value
@@ -14,7 +14,7 @@ def set_modifiers(modifiers, islands):  # can this be broken into other function
     move_set = check_moves(islands)
     move_possibilities = move_possibility(move_set)
     replace_modifiers = extract_two_highest_values(move_possibilities)
-    all_weights = {key: value for island in weights.values() for key, value in island.items()}
+    all_weights = flatten(weights)
     chosen_modifiers = extract_two_highest_values(all_weights)
 
     for feature, replace_feature in zip(chosen_modifiers, replace_modifiers):  # look into enumerate for this function
@@ -38,16 +38,22 @@ def sort_dict(dictionary):
     return sorted_dict
 
 
+#   flattens a dictionary that contains sub dictionaries
+def flatten(dictionary):
+    flattened = {key: value for sub_dict in dictionary.values() for key, value in sub_dict.items()}
+    return flattened
+
+
 #   Makes turn decisions based off available moves
-def spend_dice(islands, current_board):  # change this to take the weights and budget as variables rather than running the program on their own
+def spend_dice(islands, modifiers, dice, land_birds):  # change this to take the weights and budget as variables rather than running the program on their own
     weights = weigh_moves(islands)
-    budget = dice_budget(current_board)
-    return current_board['islands']
+    budget = dice_budget(modifiers, dice['dice_result'], dice['dice_amt'])
+    return islands, land_birds
 
 
 #   checks the islands and research tokens to determine the cost of a feature
 def check_cost(feature, island,
-               current_board):  # change this to take the token use and islands as variables rather than running the program on their own
+               land_birds):  # change this to take the token use and islands as variables rather than running the program on their own
     #   checks to see if there is a research token that would change the price
     cost = use_token(current_board, feature)
     #   dictionary establishing the price of features that do no change based off board status
@@ -57,16 +63,16 @@ def check_cost(feature, island,
         #   determines the price of plants based off the amount on the island
         if feature == 'Plants':
             plant_prices = {0: 1, 1: 2, 2: 3}
-            total = current_board['islands'][island]['Plants']
+            total = island['Plants']
             cost = plant_prices[total]
         #   determines the price of a tectonic upgrade based off the island's current size
         elif feature == 'Tectonic':
             tec_prices = {0: 2, 1: 3, 2: 4}
-            total = current_board['islands'][island]['Tectonic']
+            total = island['Tectonic']
             cost = tec_prices[total]
         #   checks to see if there are bird on the mainland to determine the price
         elif feature == 'Bird':
-            if current_board['land_birds'] > 0:
+            if land_birds > 0:
                 cost = 2
             else:
                 cost = 3
@@ -123,7 +129,7 @@ def weigh_moves(islands):
 def check_moves(islands):  # Take islands as the input
     #   finds if each feature is able to be played
     for island, features in islands.items():
-        move_set = {
+        move_set: dict[str, bool | Any] = {
             'Plants': features['Plants'] < 3 and features['Tectonic'] > 0,
             'Crab': features['Plants'] > 0 and features['Crab'] < 1,
             'Turtle': features['Crab'] == 1 and features['Turtle'] < 1,
