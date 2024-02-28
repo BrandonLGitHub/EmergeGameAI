@@ -1,22 +1,14 @@
 import random
-import copy
 
 
 #   takes the dice roll and totals up the amount of each feature can be purchased from the dice in hand
-def dice_budget(current_board):  # modify this to take the modifiers directly as an input
-    modifiers = current_board['modifiers']
-    dice_hand = current_board['roll_result']
+def dice_budget(modifiers, dice_result, dice_amt):  # modify this to take the modifiers directly as an input
     budget = {'Plants': 0, 'Crab': 0, 'Turtle': 0, 'Seal': 0, 'Tectonic': 0, 'Bird': 0,
-              'Dice': current_board['dice_amt']}
-    #   goes through all features and its related values
+              'Dice': dice_amt}
     for feature, values in modifiers.items():
-        #   looks at all the numbers from the roll
-        for number in dice_hand:
-            # checks the roll against all the current number from the roll
-            for value in values:
-                # if the number and value match, increase that features budget by 1
-                if number == value:
-                    budget[feature] += 1
+        for number in dice_result:
+            if number in values:
+                budget[feature] += 1
     return budget
 
 

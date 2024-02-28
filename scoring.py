@@ -11,13 +11,10 @@ def get_score(islands):  #take islands as an import
 def island_score(island):
     inhabitants = ['Plants', 'Crab', 'Turtle', 'Seal', 'Bird']
     #   calculate total amount of inhabitants on an island
-
     total_inhabitants = sum(island[key] for key in inhabitants)
-
     #   calculates the score by multiplying the total inhabitants by the level of tectonics
     score = total_inhabitants * island['Tectonic']
-
-    #   Add bonus points for having all animals except birds on your island
+    #   add bonus points for having all animals except birds on your island
     if island['Seal'] == 1:
         score += 3
 

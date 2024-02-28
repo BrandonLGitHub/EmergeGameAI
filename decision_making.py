@@ -1,52 +1,46 @@
-#   import dice budget
 import copy
+from dice_functions import dice_budget
+from scoring import island_score
+from typing import List
 
 
-#   import island score
-
-
-#   this function looks for the move that would give them the most points in the next round
-#   and sets a modifier for that move over the move that is the least likely to occur
-#   !!! NEED TO SOLVE WHAT TO DO IF THE LEAST LIKELY MOVE ALSO IS ONE OF THE HIGHEST POINT VALUES !!!
-def set_modifiers(current_board):  # can this be broken into other functions
-    current_modifiers = copy.copy(current_board['modifiers'])
-    #   default modifiers set to be changed to represent the next modifier configuration
+#   sets the modifiers to the feature that will give you the highest point value
+def set_modifiers(modifiers, islands):  # can this be broken into other functions
+    current_modifiers = copy.deepcopy(modifiers)
     default_modifiers = {'Plants': [1], 'Crab': [2], 'Turtle': [3], 'Seal': [4], 'Tectonic': [5], 'Bird': [6]}
-    new_modifiers = copy.copy(default_modifiers)
-    weights = weigh_moves(current_board)
-    move_set = check_moves(current_board['islands'])
-    #   stores each move and the amount of times it occurs as not possible for each island
+    new_modifiers = copy.deepcopy(default_modifiers)
+
+    weights = weigh_moves(islands)
+    move_set = check_moves(islands)
     move_possibilities = move_possibility(move_set)
+    replace_modifiers = extract_two_highest_values(move_possibilities)
+    all_weights = {key: value for island in weights.values() for key, value in island.items()}
+    chosen_modifiers = extract_two_highest_values(all_weights)
 
-    #   finds the two moves that are the least likely to be playable and their corresponding keys
-    unlikely_moves = sorted(move_possibilities.items(), key=lambda x: x[1], reverse=True)
-    replace_modifiers = list(dict(unlikely_moves[:2]).keys())
-
-    #   flatten the sub-dictionaries into a single dictionary
-    all_weights = {}
-    for island in weights.values():
-        all_weights.update(island)
-
-    # find the two highest weights and their corresponding keys
-    sorted_weights = sorted(all_weights.items(), key=lambda x: x[1], reverse=True)
-    chosen_modifiers = list(dict(sorted_weights[:2]).keys())
-
-    count = -1
-    for feature in chosen_modifiers:  # look into enumerate for this function
-        count += 1
+    for feature, replace_feature in zip(chosen_modifiers, replace_modifiers):  # look into enumerate for this function
         if len(current_modifiers[feature]) < 2:
-            dice_number = default_modifiers[replace_modifiers[count]]
-            dice_number = dice_number[0]
-            print(dice_number)
-            new_modifiers[replace_modifiers[count]] = []
+            dice_number = default_modifiers[replace_feature][0]
+            new_modifiers[replace_feature] = []
             new_modifiers[feature].append(dice_number)
     return current_modifiers
 
 
+#   takes a sorted dictionary and extracts the two highest values
+def extract_two_highest_values(dictionary):
+    sorted_dict = sort_dict(dictionary)
+    highest_two_values = [value[0] for value in sorted_dict]
+    return highest_two_values
+
+
+#   sorts a dictionary by descending values
+def sort_dict(dictionary):
+    sorted_dict = sorted(dictionary.items(), key=lambda x: x[1], reverse=True)
+    return sorted_dict
+
+
 #   Makes turn decisions based off available moves
-def spend_dice(
-        current_board):  # change this to take the weights and budget as variables rather than running the program on their own
-    weights = weigh_moves(current_board)
+def spend_dice(islands, current_board):  # change this to take the weights and budget as variables rather than running the program on their own
+    weights = weigh_moves(islands)
     budget = dice_budget(current_board)
     return current_board['islands']
 
@@ -106,20 +100,20 @@ def move_possibility(move_set):
 
 
 #   takes all possible moves and determines the point values associated with them
-def weigh_moves(current_board):
-    move_set = check_moves(current_board['islands'])
+def weigh_moves(islands):
+    move_set = check_moves(islands)
     island_weights = {}
-    #   iterates over all islands and their ossible moves
+    #   iterates over all islands and their possible moves
     for island, possible_moves in move_set.items():
         move_weights = {}
         #   iterates each specific type of move for all the possible moves in an island
         for move in possible_moves:
             #   calculates the point value of all possible moves
             if possible_moves[move] == 1:
-                next_board = copy.copy(current_board['islands'][island])
+                next_board = copy.copy(islands[island])
                 #   increases the value of the possible move's feature to calculate the score from making that move
                 next_board[move] += 1
-                points = island_score(next_board) - island_score(current_board['islands'][island])
+                points = island_score(next_board) - island_score(islands[island])
                 move_weights[move] = points
         #   saves the move weights to its corresponding island
         island_weights[island] = move_weights
