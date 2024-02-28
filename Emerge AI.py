@@ -1,37 +1,37 @@
+from typing import Dict, List, Any
+
 import decision_making as decide
-import dice_functions as dice
+import dice_functions as dice_func
 import scoring as score
 
 
 def game_runner():
-    current_board = {   #   does it make sense to break this into separate dictionaries?
-        #   initial modifier set up
-        'modifiers': {'Plants': [1], 'Crab': [2], 'Turtle': [3], 'Seal': [4], 'Tectonic': [5], 'Bird': [6]},
-        #   initial island settings
-        'islands': {
-            1: {'Plants': 1, 'Crab': 0, 'Turtle': 0, 'Seal': 0, 'Tectonic': 1, 'Bird': 0},
-            2: {'Plants': 0, 'Crab': 0, 'Turtle': 0, 'Seal': 0, 'Tectonic': 1, 'Bird': 0},
-            3: {'Plants': 3, 'Crab': 1, 'Turtle': 0, 'Seal': 0, 'Tectonic': 2, 'Bird': 0},
-            4: {'Plants': 2, 'Crab': 1, 'Turtle': 1, 'Seal': 0, 'Tectonic': 1, 'Bird': 1},
-        },
-        'land_birds': 4,
-        'score': 0,
-        'round': 0,
-        'dice': {   #   make sure all uses of this are found
+    #   initial modifier set up
+    modifiers = {'Plants': [1], 'Crab': [2], 'Turtle': [3], 'Seal': [4], 'Tectonic': [5], 'Bird': [6]},
+    #   initial island settings
+    islands = {
+        1: {'Plants': 1, 'Crab': 0, 'Turtle': 0, 'Seal': 0, 'Tectonic': 1, 'Bird': 0},
+        2: {'Plants': 0, 'Crab': 0, 'Turtle': 0, 'Seal': 0, 'Tectonic': 1, 'Bird': 0},
+        3: {'Plants': 3, 'Crab': 1, 'Turtle': 0, 'Seal': 0, 'Tectonic': 2, 'Bird': 0},
+        4: {'Plants': 2, 'Crab': 1, 'Turtle': 1, 'Seal': 0, 'Tectonic': 1, 'Bird': 1},
+    },
+    land_birds = 4,
+    current_round = 0
+    dice: dict[str, list[Any] | int | Any] = {   #   make sure all uses of this are found
             'dice_amt': 6,
             'roll_result': [],
             'saved_dice': []
     }
-    }
-    while current_board['round'] < 1:
-        current_board['round'] += 1
-        print(f"Round {current_board['round']} has begun!\n")
-        current_board['modifiers'] = decide.set_modifiers(current_board)
+
+    while current_round < 1:
+        current_round += 1
+        print(f"Round {current_round} has begun!\n")
+        modifiers = decide.set_modifiers(modifiers, islands)
         # sets dice based off of round number subtracted by dice saved from last round
-        current_board['dice']['dice_amt'] = dice.dice_count(current_board['round']) - len(current_board['dice']['saved_dice'])
-        current_board['roll_result'] = dice.roll_dice(current_board['dice_amt'], current_board['saved_dice'])
-        current_board['islands'] = decide.spend_dice(current_board)
-        print(f'End of round {current_board["round"]}')
+        dice['dice_amt'] = dice_func.dice_count(current_round) - len(dice['saved_dice'])
+        dice['roll_result'] = dice_func.roll_dice(dice['dice_amt'], dice['saved_dice'])
+        islands, land_birds = decide.spend_dice(islands, modifiers, dice, land_birds)
+        print(f'End of round {current_round}')
 
 
 if __name__ == '__main__':
