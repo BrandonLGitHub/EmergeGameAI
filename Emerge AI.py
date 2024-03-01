@@ -1,6 +1,8 @@
 from typing import Dict, List, Any
 
 import decision_making as decide
+import move_forecasting as forecast
+import modifier_functions as mod
 import dice_functions as dice_func
 import scoring as score
 
@@ -26,7 +28,7 @@ def game_runner():
     while current_round < 1:
         current_round += 1
         print(f"Round {current_round} has begun!\n")
-        modifiers = decide.set_modifiers(modifiers, islands)
+        modifiers = mod.set_modifiers(modifiers, islands)
         # sets dice based off of round number subtracted by dice saved from last round
         dice['dice_amt'] = dice_func.dice_count(current_round) - len(dice['saved_dice'])
         dice['roll_result'] = dice_func.roll_dice(dice['dice_amt'], dice['saved_dice'])
