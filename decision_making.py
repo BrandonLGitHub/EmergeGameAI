@@ -1,19 +1,47 @@
 from dice_functions import dice_budget
-from move_forecasting import weigh_moves, check_moves
+import move_forecasting as forecast
 from modifier_functions import flatten, sort_dict
 
 
 #   Makes turn decisions based off available moves
 def spend_dice(islands, modifiers, dice, land_birds, tokens):
-    weights = weigh_moves(islands)
-    sorted_weights = sort_dict(flatten(weights))
+    weights = forecast.weigh_moves(islands)
+    sorted_weights = forecast.sort_weights(weights)
     budget = dice_budget(modifiers, dice['dice_result'], dice['dice_amt'])
-    move_set = check_moves(islands)
-    ''' TODO create a loop that finds the highest weight in the weights dictionary, checks if it can be afforded, if it can
-        buy it, if it cant move on to the next highest move until the dice budget cannot afford anymore moves. 
-        After that use buy tokens or save dice to store dice or get a research token if there are any dice remaining'''
+    for move, score, island in weights:
+        cost = check_cost(move, island, land_birds, tokens)
+        if affordability(move, cost, budget):
+            islands, land_birds = update_board(move, island, islands, land_birds)
+            budget = update_budget(move, cost, budget, modifiers)
+    return islands, land_birds, saved_dice, tokens
 
+
+#   checks the budget to see if a move can be purchased
+def affordability(move, cost, budget):
+    if budget[move] >= cost:
+        return True
+    else:
+        return False
+
+
+#   updates the board based off the move made
+def update_board(feature, island, islands, land_birds):
+    islands[island][feature] += 1
+    if feature == 'Bird' and land_birds > 0:
+        land_birds -= 1
     return islands, land_birds
+
+
+#   updates the budget based of the cost of a move
+def update_budget(move, cost, budget, modifiers):
+    budget[move] -= cost
+    budget['dice_remaining'] -= cost
+    budget['dice_hand'] = update_dicehand(move, cost, budget['dice_hand'], modifiers)
+    return budget
+
+
+#   updates the dice hand based off the dice spent from the hand
+def update_dicehand():
 
 
 #   checks the islands and research tokens to determine the cost of a feature
