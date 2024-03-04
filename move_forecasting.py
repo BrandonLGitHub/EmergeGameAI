@@ -42,6 +42,17 @@ def weigh_moves(islands):
     return island_weights
 
 
+#   sorts the weights into a list of tuples in descending score order
+def sort_weights(weights):
+    all_weights = []
+    for island, moves in weights.items():
+        for move, score in moves.items():
+            all_weights.append((move, score, island))
+
+    all_weights.sort(key=lambda x: x[1], reverse=True)
+    return all_weights
+
+
 def check_moves(islands):  # Take islands as the input
     #   finds if each feature is able to be played
     for island, features in islands.items():
