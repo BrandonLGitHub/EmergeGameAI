@@ -1,5 +1,6 @@
 from dice_functions import dice_budget
 import move_forecasting as forecast
+import copy
 from modifier_functions import flatten, sort_dict
 
 
@@ -41,7 +42,16 @@ def update_budget(move, cost, budget, modifiers):
 
 
 #   updates the dice hand based off the dice spent from the hand
-def update_dicehand():
+def update_dicehand(move, cost, hand, modifiers):
+    count = 0
+    hand_copy = copy.copy(hand)
+    for num in hand:
+        if num in modifiers[move]:
+            hand_copy.remove(num)
+            count += 1
+            if count == cost:
+                break
+    return hand_copy
 
 
 #   checks the islands and research tokens to determine the cost of a feature
