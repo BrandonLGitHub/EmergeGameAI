@@ -45,7 +45,7 @@ def update_board(feature, island, islands, land_birds_count):
     if island in islands:
         islands[island][feature] += 1
         if feature == 'Bird' and land_birds_count > 0:
-            land_birds_count -= 1git 
+            land_birds_count -= 1 
     return islands, land_birds_count
 
 
