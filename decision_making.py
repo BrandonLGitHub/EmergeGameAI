@@ -19,22 +19,67 @@ def spend_dice(islands, modifiers, dice, land_birds, tokens):
 
 #   checks the budget to see if a move can be purchased
 def affordability(move, cost, budget):
-    if budget[move] >= cost:
+    if budget[move] >= cost and budget['dice_amt'] >= cost:
         return True
     else:
         return False
 
 
 #   updates the board based off the move made
-def update_board(feature, island, islands, land_birds):
-    islands[island][feature] += 1
-    if feature == 'Bird' and land_birds > 0:
-        land_birds -= 1
-    return islands, land_birds
+def update_board(feature, island, islands, land_birds_count):
+    """
+    Update the board by selecting the specified island from the islands and incrementing the
+    specified feature by 1
+
+    :param feature: str
+        The feature being updated
+    :param island: dict[str, int]
+        The island whose feature is being updated
+    :param islands: dict[str, dict[str, int]]
+        Dictionary containing all the islands
+    :param land_birds_count: int
+        Count of the birds on the mainland of the board
+    :return: tuple(dict[str, dict[str, int]], int)
+        The updated islands and the updated count of land_birds
+    """
+    if island in islands:
+        islands[island][feature] += 1
+        if feature == 'Bird' and land_birds_count > 0:
+            land_birds_count -= 1git 
+    return islands, land_birds_count
 
 
 #   updates the budget based of the cost of a move
 def update_budget(move, cost, budget, modifiers):
+    """
+    Update the budget based on the given move and modifiers.
+
+    :param move: str
+        The move to be executed.
+    :param cost: int
+        The cost associated with the move, determining the amount subtracted from the move's budget, dice remaining
+        and modifications made to the dice hand.
+    :param budget: dict[str, Union[int, list]]
+        A dictionary representing the budget, where keys are strings indicating items,
+        and values are either integers representing move budgets and the dice remaining or lists representing the dice
+        hand.
+    :param modifiers: dict[str, list[int]]
+        A dictionary containing the modifiers associated with each move.
+
+    :return: dict[str, Union[int, list]]
+        The updated budget after subtracting the cost and updating the dice hand
+
+    :example:
+
+    >>> move = "Plants"
+    >>> cost = 2
+    >>> budget = {'Plants': 2, 'Crab': 0, 'Turtle': 0, 'Seal': 0, 'Tectonic': 0, 'Bird': 0,
+    >>>             'dice_remaining': 6, 'dice_hand': [1,1,2,3,5,6]}
+    >>> modifiers = {'Plants': [1], 'Crab': [2], 'Turtle': [3], 'Seal': [4], 'Tectonic': [5], 'Bird': [6]}
+    >>> update_budget(move, cost, budget, modifiers)
+    {'Plants': 0, 'Crab': 0, 'Turtle': 0, 'Seal': 0, 'Tectonic': 0, 'Bird': 0,
+    'dice_remaining': 4, 'dice_hand': [2,3,5,6]}
+    """
     budget[move] -= cost
     budget['dice_remaining'] -= cost
     budget['dice_hand'] = update_dicehand(move, cost, budget['dice_hand'], modifiers)
@@ -43,6 +88,30 @@ def update_budget(move, cost, budget, modifiers):
 
 #   updates the dice hand based off the dice spent from the hand
 def update_dicehand(move, cost, hand, modifiers):
+    """
+    Update the dice hand based on the given move and modifiers.
+
+    :param move: str
+        The move to be executed.
+    :param cost: int
+        The cost associated with the move, determining the number of modifications allowed.
+    :param hand: list[int]
+        The list representing the current dice hand.
+    :param modifiers: dict[str, list[int]]
+        A dictionary containing the modifiers associated with each move.
+
+    :return: list[int]
+        The updated dice hand after subtracting the cost for the approrpiate move's corresponding modifiers.
+
+    :example:
+
+    >>> hand = [1, 2, 3, 4, 5]
+    >>> move = "remove"
+    >>> cost = 2
+    >>> modifiers = {"remove": [2, 4]}
+    >>> update_dicehand(move, cost, hand, modifiers)
+    [1, 3, 5]
+    """
     count = 0
     hand_copy = copy.copy(hand)
     for num in hand:
