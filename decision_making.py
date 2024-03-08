@@ -10,6 +10,7 @@ def spend_dice(islands, modifiers, dice, land_birds, tokens):
     sorted_weights = forecast.sort_weights(weights)
     budget = dice_budget(modifiers, dice['dice_result'], dice['dice_amt'])
     for feature, score, island in weights:
+        #    TODO check_cost may require the island dict as an input
         cost = check_cost(feature, island, land_birds, tokens)
         if affordability(feature, cost, budget):
             islands, land_birds = update_board(feature, island, islands, land_birds)
@@ -20,12 +21,27 @@ def spend_dice(islands, modifiers, dice, land_birds, tokens):
 #   checks the budget to see if a feature can be purchased
 def affordability(feature, cost, budget):
     """
-    Checks a feature's budget and the amount of dive remaining can afford the cost of a move
+    Checks if a feature's budget and the amount of dice remaining can afford the cost of a feature.
+
     :param feature: str
         The feature that will be checked for affordability
-    :param cost:
-    :param budget:
-    :return:
+    :param cost: int
+        The cost of updating the desired feature
+    :param budget:dict[str, Union[int, list]]
+        A dictionary representing the budget, where keys are strings indicating items,
+        and values are either integers representing feature budgets and the dice remaining or lists representing
+        the dice hand.
+
+    :return: bool
+
+    :example:
+
+    >>> feature = 'Seal'
+    >>> cost = 4
+    >>> budget = {'Plants': 2, 'Crab': 1, 'Turtle': 0, 'Seal': 4, 'Tectonic': 0, 'Bird': 0,
+    >>>             'dice_remaining': 7, 'dice_hand': [1,1,2,4,4,4,4]}
+    >>> affordability(feature, cost, budget)
+    True
     """
     if budget[feature] >= cost and budget['dice_amt'] >= cost:
         return True
@@ -34,6 +50,7 @@ def affordability(feature, cost, budget):
 
 
 #   updates the board based off the feature move made
+#   TODO Test this function for island input
 def update_board(feature, island, islands, land_birds_count):
     """
     Update the board by selecting the specified island from the islands and incrementing the
@@ -41,14 +58,34 @@ def update_board(feature, island, islands, land_birds_count):
 
     :param feature: str
         The feature being updated
-    :param island: dict[str, int]
+    :param island: int
         The island whose feature is being updated
-    :param islands: dict[str, dict[str, int]]
+    :param islands: dict[int, dict[str, int]]
         Dictionary containing all the islands
     :param land_birds_count: int
         Count of the birds on the mainland of the board
+
     :return: tuple(dict[str, dict[str, int]], int)
         The updated islands and the updated count of land_birds
+
+    :example:
+
+    >>> feature = 'Crab'
+    >>> island = 2
+    >>> islands = {
+    >>>    1: {'Plants': 1, 'Crab': 0, 'Turtle': 0, 'Seal': 0, 'Tectonic': 1, 'Bird': 0},
+    >>>    2: {'Plants': 0, 'Crab': 0, 'Turtle': 0, 'Seal': 0, 'Tectonic': 1, 'Bird': 0},
+    >>>    3: {'Plants': 3, 'Crab': 1, 'Turtle': 0, 'Seal': 0, 'Tectonic': 2, 'Bird': 0},
+    >>>    4: {'Plants': 2, 'Crab': 1, 'Turtle': 1, 'Seal': 0, 'Tectonic': 1, 'Bird': 1},
+    >>> }
+    >>> land_birds_count = 2
+    >>> update_board(feature, island, islands, land_birds_count)
+    {
+        1: {'Plants': 1, 'Crab': 1, 'Turtle': 0, 'Seal': 0, 'Tectonic': 1, 'Bird': 0},
+        2: {'Plants': 0, 'Crab': 0, 'Turtle': 0, 'Seal': 0, 'Tectonic': 1, 'Bird': 0},
+        3: {'Plants': 3, 'Crab': 1, 'Turtle': 0, 'Seal': 0, 'Tectonic': 2, 'Bird': 0},
+        4: {'Plants': 2, 'Crab': 1, 'Turtle': 1, 'Seal': 0, 'Tectonic': 1, 'Bird': 1},
+     }
     """
     if island in islands:
         islands[island][feature] += 1
@@ -69,8 +106,8 @@ def update_budget(feature, cost, budget, modifiers):
         and modifications made to the dice hand.
     :param budget: dict[str, Union[int, list]]
         A dictionary representing the budget, where keys are strings indicating items,
-        and values are either integers representing feature budgets and the dice remaining or lists representing the dice
-        hand.
+        and values are either integers representing feature budgets and the dice remaining or lists representing
+        the dice hand.
     :param modifiers: dict[str, list[int]]
         A dictionary containing the modifiers associated with each feature.
 
