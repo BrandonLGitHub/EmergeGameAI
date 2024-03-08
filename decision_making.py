@@ -171,6 +171,30 @@ def update_dicehand(feature, cost, hand, modifiers):
 
 #   checks the islands and research tokens to determine the cost of a feature
 def check_cost(feature, island, islands, land_birds, tokens):
+    """
+    Returns the cost of updating a given feature based off the chosen island's configuration, any research token
+    discounts, and for the Bird feature, checks to see if there are birds on the mainland.
+
+    :param feature: str
+        The feature for which the cost is being determined.
+    :param island: int
+        The island that is being checked for cost
+    :param islands: dict[int, dict[str, int]]
+        Dictionary containing all the islands' configurations
+    :param land_birds: int
+        Represents the birds remaining on the mainland which can be purchased at a lower cost.
+    :param tokens:# TODO create tokens type
+
+
+    :return: int
+        The cost of upgrading the chosen feature on the chosen island
+
+    :example:
+    >>>
+    >>>
+    >>>
+
+    """
     #   checks to see if there is a research token that would change the price
     cost = use_token(tokens, feature)
     #   dictionary establishing the price of features that do no change based off board status
