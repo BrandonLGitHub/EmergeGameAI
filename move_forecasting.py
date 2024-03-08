@@ -3,41 +3,41 @@ from scoring import island_score
 from typing import Any
 
 
-#   creates an inverse possibility dictionary the determines how many times a move is not possible to be played
+#   creates an inverse possibility dictionary the determines how many times a feature is not possible to be played
 def move_possibility(move_set):
-    #   stores each move and the amount of times it occurs as not possible for each island
+    #   stores each feature and the amount of times it occurs as not possible for each island
     move_possibilities = {}
-    #   iterates over all the moves and determines how many 0 values occur for each move
-    for island, moves in move_set.items():
+    #   iterates over all the features and determines how many 0 values occur for each feature
+    for island, features in move_set.items():
         # check if the key is already present in move_possibilities
-        for move, possible in moves.items():
-            if move in move_possibilities:
+        for feature, possible in features.items():
+            if feature in move_possibilities:
                 # increment count if the value is 0
-                move_possibilities[move] += 1 if possible == 0 else 0
+                move_possibilities[feature] += 1 if possible == 0 else 0
             else:
                 # initialize count if the key is not present
-                move_possibilities[move] = 1 if possible == 0 else 0
+                move_possibilities[feature] = 1 if possible == 0 else 0
 
     return move_possibilities
 
 
-#   takes all possible moves and determines the point values associated with them
+#   takes all possible feature moves and determines the point values associated with them
 def weigh_moves(islands):
     move_set = check_moves(islands)
     island_weights = {}
-    #   iterates over all islands and their possible moves
+    #   iterates over all islands and their possible feature moves
     for island, possible_moves in move_set.items():
         move_weights = {}
-        #   iterates each specific type of move for all the possible moves in an island
-        for move in possible_moves:
-            #   calculates the point value of all possible moves
-            if possible_moves[move] == 1:
+        #   iterates each specific type of feature for all the possible moves in an island
+        for feature in possible_moves:
+            #   calculates the point value of all possible feature moves
+            if possible_moves[feature] == 1:
                 next_board = copy.deepcopy(islands[island])
-                #   increases the value of the possible move's feature to calculate the score from making that move
-                next_board[move] += 1
+                #   increases the value of the possible move's feature to calculate the score from making that feature
+                next_board[feature] += 1
                 points = island_score(next_board) - island_score(islands[island])
-                move_weights[move] = points
-        #   saves the move weights to its corresponding island
+                move_weights[feature] = points
+        #   saves the feature weights to its corresponding island
         island_weights[island] = move_weights
     return island_weights
 
@@ -45,9 +45,9 @@ def weigh_moves(islands):
 #   sorts the weights into a list of tuples in descending score order
 def sort_weights(weights):
     all_weights = []
-    for island, moves in weights.items():
-        for move, score in moves.items():
-            all_weights.append((move, score, island))
+    for island, features in weights.items():
+        for feature, score in features.items():
+            all_weights.append((feature, score, island))
 
     all_weights.sort(key=lambda x: x[1], reverse=True)
     return all_weights
