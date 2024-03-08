@@ -10,11 +10,12 @@ def spend_dice(islands, modifiers, dice, land_birds, tokens):
     sorted_weights = forecast.sort_weights(weights)
     budget = dice_budget(modifiers, dice['dice_result'], dice['dice_amt'])
     for feature, score, island in weights:
-        #    TODO check_cost may require the island dict as an input
-        cost = check_cost(feature, island, land_birds, tokens)
+        cost = check_cost(feature, island, islands, land_birds, tokens)
         if affordability(feature, cost, budget):
             islands, land_birds = update_board(feature, island, islands, land_birds)
             budget = update_budget(feature, cost, budget, modifiers)
+    tokens = buy_tokens(dice)
+    saved_dice = save_dice(dice)
     return islands, land_birds, saved_dice, tokens
 
 
@@ -43,7 +44,7 @@ def affordability(feature, cost, budget):
     >>> affordability(feature, cost, budget)
     True
     """
-    if budget[feature] >= cost and budget['dice_amt'] >= cost:
+    if budget[feature] >= cost and budget['dice_remaining'] >= cost:
         return True
     else:
         return False
@@ -169,7 +170,7 @@ def update_dicehand(feature, cost, hand, modifiers):
 
 
 #   checks the islands and research tokens to determine the cost of a feature
-def check_cost(feature, island, land_birds, tokens):
+def check_cost(feature, island, islands, land_birds, tokens):
     #   checks to see if there is a research token that would change the price
     cost = use_token(tokens, feature)
     #   dictionary establishing the price of features that do no change based off board status
@@ -179,12 +180,12 @@ def check_cost(feature, island, land_birds, tokens):
         #   determines the price of plants based off the amount on the island
         if feature == 'Plants':
             plant_prices = {0: 1, 1: 2, 2: 3}
-            total = island['Plants']
+            total = islands[island]['Plants']
             cost = plant_prices[total]
         #   determines the price of a tectonic upgrade based off the island's current size
         elif feature == 'Tectonic':
             tec_prices = {0: 2, 1: 3, 2: 4}
-            total = island['Tectonic']
+            total = islands[island]['Tectonic']
             cost = tec_prices[total]
         #   checks to see if there are bird on the mainland to determine the price
         elif feature == 'Bird':
