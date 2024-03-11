@@ -6,16 +6,54 @@ from modifier_functions import flatten, sort_dict
 
 #   Makes turn decisions based off available feature moves
 def spend_dice(islands, modifiers, dice, land_birds, tokens):
+    """
+    Purchases the features with the greatest point values that are afforable using the dice rolled
+
+    :param islands: dict[int, dict[str, int]]
+        Contains all the islands and their corresponding configurations.
+    :param modifiers: dict[int, list[int]]
+        The features and their corresponding modifier values.
+    :param dice: dict[str, list[Any] | int | Any]
+        Contains the dice remaining, int, the dice hand, list[], and saved dice, list[].
+    :param land_birds: int
+        Represents the number of birds on the mainland.
+    :param tokens: #TODO add tokens
+        Dictionary containing the tokens owned.
+
+    :return: tuple(dict[str, dict[str, int]], int, list[int], #TODO add tokens
+        Contains the updates islands, land_birds, saved dice, and token values
+
+    :example:
+
+    >>> islands = {
+    >>>             1: {'Plants': 1, 'Crab': 0, 'Turtle': 0, 'Seal': 0, 'Tectonic': 1, 'Bird': 0},
+    >>>             2: {'Plants': 0, 'Crab': 0, 'Turtle': 0, 'Seal': 0, 'Tectonic': 1, 'Bird': 0},
+    >>>             3: {'Plants': 3, 'Crab': 1, 'Turtle': 0, 'Seal': 0, 'Tectonic': 2, 'Bird': 0},
+    >>>             4: {'Plants': 2, 'Crab': 1, 'Turtle': 1, 'Seal': 0, 'Tectonic': 1, 'Bird': 1},
+    >>>     }
+    >>> modifiers = {'Plants': [1], 'Crab': [2], 'Turtle': [3], 'Seal': [4], 'Tectonic': [5], 'Bird': [6]}
+    >>> dice = {
+    >>>         'dice_amt': 6,
+    >>>         'roll_result': [1,1,2,1,3,4],
+    >>>         'saved_dice': []
+    >>>      }
+    >>> land_birds = 2
+    >>> tokens = None
+    >>> spend_dice(islands, modifiers, dice, land_birds, tokens)
+    #   TODO add result
+    """
+    #   determines the point values of every possible move
     weights = forecast.weigh_moves(islands)
+    #   sorts the weights in descending order and returns a list of tuples with the corresponding feature and island
     sorted_weights = forecast.sort_weights(weights)
     budget = dice_budget(modifiers, dice['dice_result'], dice['dice_amt'])
-    for feature, score, island in weights:
+    for feature, score, island in sorted_weights:
         cost = check_cost(feature, island, islands, land_birds, tokens)
         if affordability(feature, cost, budget):
             islands, land_birds = update_board(feature, island, islands, land_birds)
             budget = update_budget(feature, cost, budget, modifiers)
     tokens = buy_tokens(dice)
-    saved_dice = save_dice(dice)
+    saved_dice = save_dice(weights, dice)
     return islands, land_birds, saved_dice, tokens
 
 
@@ -244,5 +282,5 @@ def buy_tokens(dice):
 
 
 #   TODO create function that saves any dice that contribute to the highest weighted feature move
-def save_dice(weights):
+def save_dice(weights, dice):
     return None
