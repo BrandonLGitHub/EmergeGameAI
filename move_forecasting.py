@@ -25,19 +25,24 @@ def move_possibility(move_set):
 def weigh_moves(islands):
     move_set = check_moves(islands)
     island_weights = {}
+    empty_island = {'Plants': 0, 'Crab': 0, 'Turtle': 0, 'Seal': 0, 'Tectonic': 0, 'Bird': 0}
     #   iterates over all islands and their possible feature moves
     for island, possible_moves in move_set.items():
         move_weights = {}
-        #   iterates each specific type of feature for all the possible moves in an island
-        for feature in possible_moves:
-            #   calculates the point value of all possible feature moves
-            if possible_moves[feature] == 1:
-                next_board = copy.deepcopy(islands[island])
-                #   increases the value of the possible move's feature to calculate the score from making that feature
-                next_board[feature] += 1
-                # TODO make it so placing your first island shows as 1 point, otherwise it will be zero and not occur
-                points = island_score(next_board) - island_score(islands[island])
-                move_weights[feature] = points
+        #   assigns the creation of a new island a value of 1 point
+        if islands[island] == empty_island:
+            move_weights['Tectonic'] = 1
+        else:
+            #   iterates each specific type of feature for all the possible moves in an island
+            for feature in possible_moves:
+                #   calculates the point value of all possible feature moves
+                if possible_moves[feature] == 1:
+                    next_board = copy.deepcopy(islands[island])
+                    # increases the value of the possible move's feature to calculate the score from making that feature
+                    #   TODO Test using update_board() to see the score impact
+                    next_board[feature] += 1
+                    points = island_score(next_board) - island_score(islands[island])
+                    move_weights[feature] = points
         #   saves the feature weights to its corresponding island
         island_weights[island] = move_weights
     return island_weights
