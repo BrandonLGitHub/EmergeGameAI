@@ -128,8 +128,12 @@ def update_board(feature, island, islands, land_birds_count):
     """
     if island in islands:
         islands[island][feature] += 1
-        if feature == 'Bird' and land_birds_count > 0:
-            land_birds_count -= 1 
+        if feature == 'Bird':
+            if land_birds_count > 0:
+                land_birds_count -= 1
+            if islands[island]['Plants'] < 4:
+                islands[island]['Plants'] += 1
+
     return islands, land_birds_count
 
 
