@@ -6,9 +6,12 @@ class test_decision_making(unittest.TestCase):
 
     def test_update_dicehand(self):
         self.assertEqual(
-            dm.update_dicehand('Bird', 2, [6, 6, 6, 1, 3],
-                               {'Plants': [1], 'Crab': [2], 'Turtle': [3],
-                                'Seal': [4], 'Tectonic': [5], 'Bird': [6]}), [6, 1, 3]
+            dm.update_dicehand(
+                                'Bird', 2, [6, 6, 6, 1, 3],
+                                {'Plants': [1], 'Crab': [2], 'Turtle': [3],
+                                'Seal': [4], 'Tectonic': [5], 'Bird': [6]}
+            ),
+            [6, 1, 3]
         )
         self.assertEqual(
             dm.update_dicehand('Bird', 2, [6, 5, 6, 1, 3],
@@ -62,6 +65,8 @@ class test_decision_making(unittest.TestCase):
                           ), 3
         )
         #   TODO add tests for tokens once that system is built out
+
+    def test_update_board(self):
 
 if __name__ == '__main__':
     unittest.main()
