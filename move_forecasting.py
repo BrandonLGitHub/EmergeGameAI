@@ -35,6 +35,7 @@ def weigh_moves(islands):
                 next_board = copy.deepcopy(islands[island])
                 #   increases the value of the possible move's feature to calculate the score from making that feature
                 next_board[feature] += 1
+                # TODO make it so placing your first island shows as 1 point, otherwise it will be zero and not occur
                 points = island_score(next_board) - island_score(islands[island])
                 move_weights[feature] = points
         #   saves the feature weights to its corresponding island
@@ -55,14 +56,16 @@ def sort_weights(weights):
 
 def check_moves(islands):  # Take islands as the input
     #   finds if each feature is able to be played
+    move_set = {}
     for island, features in islands.items():
-        move_set: dict[str, bool | Any] = {
-            'Plants': features['Plants'] < 3 and features['Tectonic'] > 0,
-            'Crab': features['Plants'] > 0 and features['Crab'] < 1,
-            'Turtle': features['Crab'] == 1 and features['Turtle'] < 1,
-            'Seal': features['Turtle'] == 1 and features['Seal'] < 1,
-            'Tectonic': features['Tectonic'] < 3,
-            'Bird': features['Tectonic'] > 0 and features['Bird'] < 1
-        }
+        island_move_set = {
+                'Plants': features['Plants'] < 3 and features['Tectonic'] > 0,
+                'Crab': features['Plants'] > 0 and features['Crab'] < 1,
+                'Turtle': features['Crab'] == 1 and features['Turtle'] < 1,
+                'Seal': features['Turtle'] == 1 and features['Seal'] < 1,
+                'Tectonic': features['Tectonic'] < 3,
+                'Bird': features['Tectonic'] > 0 and features['Bird'] < 1
+            }
+        move_set[island] = island_move_set
     return move_set
 
