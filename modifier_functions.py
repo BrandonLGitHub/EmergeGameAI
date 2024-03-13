@@ -7,12 +7,17 @@ def set_modifiers(modifiers, islands):  # can this be broken into other function
     current_modifiers = copy.deepcopy(modifiers)
     default_modifiers = {'Plants': [1], 'Crab': [2], 'Turtle': [3], 'Seal': [4], 'Tectonic': [5], 'Bird': [6]}
     new_modifiers = copy.deepcopy(default_modifiers)
-
+    #   determines the points gained from making each move
     weights = forecast.weigh_moves(islands)
+    #   checks if moves are possible
     move_set = forecast.check_moves(islands)
+    #   creates a dictionary containing how uncommon a move's availability is
     move_possibilities = forecast.move_possibility(move_set)
+    #   selects the two least likely move to be replaced
     replace_modifiers = extract_two_highest_values(move_possibilities)
+    #   places the weights of all moves in a single dictionary
     all_weights = flatten(weights)
+    #   selects the move with the highest point value
     chosen_modifiers = extract_two_highest_values(all_weights)
 
     for feature, replace_feature in zip(chosen_modifiers, replace_modifiers):  # look into enumerate for this function
@@ -28,6 +33,10 @@ def extract_two_highest_values(dictionary):
     sorted_dict = sort_dict(dictionary)
     highest_two_values = [value[0] for value in sorted_dict]
     return highest_two_values
+
+
+def extract_two_lowest_values(dictionary):
+    sorted_dict = sort_dict(dictionary)
 
 
 #   sorts a dictionary by descending values

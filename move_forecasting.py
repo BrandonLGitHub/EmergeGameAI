@@ -4,6 +4,7 @@ from typing import Any
 
 
 #   creates an inverse possibility dictionary the determines how many times a feature is not possible to be played
+#   TODO change this to calculate how common a move is on the board
 def move_possibility(move_set):
     #   stores each feature and the amount of times it occurs as not possible for each island
     move_possibilities = {}
