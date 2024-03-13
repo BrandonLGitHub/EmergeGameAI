@@ -24,17 +24,17 @@ def get_score(islands):
     14
     """
     score = 0
-    for island in islands:
-        score += island_score(island)
+    for island, features in islands.items():
+        score += island_score(features)
     return score
 
 
 # calculates the score of individual islands
-def island_score(island):
+def island_score(features):
     """
     Checks the score of an individual island.
 
-    :param island: dict[str, int]
+    :param features: dict[str, int]
         Represents which features and how many of each is present on the island.
 
     :return: int
@@ -42,17 +42,17 @@ def island_score(island):
 
     :example:
 
-    >>> island = {'Plants': 3, 'Crab': 1, 'Turtle': 0, 'Seal': 0, 'Tectonic': 2, 'Bird': 0}
-    >>> island_score(island)
+    >>> features = {'Plants': 3, 'Crab': 1, 'Turtle': 0, 'Seal': 0, 'Tectonic': 2, 'Bird': 0}
+    >>> island_score(features)
     8
     """
     inhabitants = ['Plants', 'Crab', 'Turtle', 'Seal', 'Bird']
     #   calculate total amount of inhabitants on an island
-    total_inhabitants = sum(island[key] for key in inhabitants)
+    total_inhabitants = sum(features[key] for key in inhabitants)
     #   calculates the score by multiplying the total inhabitants by the level of tectonics
-    score: int | Any = total_inhabitants * island['Tectonic']
+    score: int | Any = total_inhabitants * features['Tectonic']
     #   add bonus points for having all animals except birds on your island
-    if island['Seal'] == 1:
+    if features['Seal'] == 1:
         score += 3
 
     return score
