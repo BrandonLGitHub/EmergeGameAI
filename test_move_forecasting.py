@@ -51,3 +51,6 @@ class test_move_forecasting(unittest.TestCase):
                 4: {'Plants': 1, 'Seal': 4, 'Tectonic': 5}
             }
         )
+
+if __name__ == '__main__':
+    unittest.main()

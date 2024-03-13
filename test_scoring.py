@@ -29,3 +29,6 @@ class test_scoring(unittest.TestCase):
             score.island_score({'Plants': 2, 'Crab': 1, 'Turtle': 1, 'Seal': 1, 'Tectonic': 1, 'Bird': 1}),
             9
         )
+
+if __name__ == '__main__':
+    unittest.main()
