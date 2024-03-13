@@ -19,11 +19,10 @@ def dice_budget(modifiers, dice_hand, dice_amt):  # modify this to take the modi
     :example:
 
     >>> modifiers = {'Plants': [1], 'Crab': [2], 'Turtle': [3], 'Seal': [4], 'Tectonic': [5], 'Bird': [6]}
-    >>> dice_hand = [1,1,2,4,5,6,6]
+    >>> dice_hand = [1, 1, 2, 4, 5, 6, 6]
     >>> dice_amt = 7
     >>> dice_budget(modifiers, dice_hand, dice_amt)
-    {'Plants': 2, 'Crab': 1, 'Turtle': 0, 'Seal': 1, 'Tectonic': 1, 'Bird': 2,
-              'dice_remaining': 7, 'dice_hand': [1,1,2,4,5,6,6]}
+    {'Plants': 2, 'Crab': 1, 'Turtle': 0, 'Seal': 1, 'Tectonic': 1, 'Bird': 2, 'dice_remaining': 7, 'dice_hand': [1,1,2,4,5,6,6]}
     """
     budget = {'Plants': 0, 'Crab': 0, 'Turtle': 0, 'Seal': 0, 'Tectonic': 0, 'Bird': 0,
               'dice_remaining': dice_amt, 'dice_hand': dice_hand}
@@ -57,7 +56,8 @@ def roll_dice(dice_amt, saved_dice):
     * representing any number between 1 & 6.
     """
     # Generates rolls for the dice
-    dice_rolled: list[int] = [random.randint(1, 6) for x in range(dice_amt)]
+    rollable_dice = dice_amt - len(saved_dice)
+    dice_rolled: list[int] = [random.randint(1, 6) for x in range(rollable_dice)]
     # adds saved dice back into the dice hand
     dice_rolled.extend(saved_dice)
     return dice_rolled
@@ -81,5 +81,4 @@ def dice_count(round_num):
     """
     # stores the correct dice amount for each round
     dice_per_round = {1: 6, 2: 7, 3: 7, 4: 8, 5: 8, 6: 9, 7: 9, 8: 10}
-    assert isinstance(round_num, object)  # what is this for?
     return dice_per_round.get(round_num)

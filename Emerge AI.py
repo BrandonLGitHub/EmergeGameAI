@@ -29,8 +29,8 @@ def game_runner():
         current_round += 1
         print(f"Round {current_round} has begun!\n")
         modifiers = mod.set_modifiers(modifiers, islands)
-        # sets dice based off of round number subtracted by dice saved from last round
-        dice['dice_amt'] = dice_func.dice_count(current_round) - len(dice['saved_dice'])
+        # sets dice based off of round number
+        dice['dice_amt'] = dice_func.dice_count(current_round)
         dice['roll_result'] = dice_func.roll_dice(dice['dice_amt'], dice['saved_dice'])
         islands, land_birds = decide.spend_dice(islands, modifiers, dice, land_birds)
         print(f'End of round {current_round}')
