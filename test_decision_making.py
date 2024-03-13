@@ -67,6 +67,46 @@ class test_decision_making(unittest.TestCase):
         #   TODO add tests for tokens once that system is built out
 
     def test_update_board(self):
+        dm.update_board(
+            'Crab', 1,
+            {
+                1: {'Plants': 1, 'Crab': 0, 'Turtle': 0, 'Seal': 0, 'Tectonic': 2, 'Bird': 0},
+            }, 1, None
+        ), (
+            {
+                1: {'Plants': 2, 'Crab': 1, 'Turtle': 0, 'Seal': 0, 'Tectonic': 2, 'Bird': 1},
+            }, 1, None
+        )
+        dm.update_board(
+            'Bird', 1,
+            {
+                1: {'Plants': 1, 'Crab': 0, 'Turtle': 0, 'Seal': 0, 'Tectonic': 2, 'Bird': 0},
+                }, 1, None
+        ),(
+            {
+                1: {'Plants': 2, 'Crab': 0, 'Turtle': 0, 'Seal': 0, 'Tectonic': 2, 'Bird': 1},
+            }, 0, None
+        )
+        dm.update_board(
+            'Bird', 1,
+            {
+                1: {'Plants': 4, 'Crab': 0, 'Turtle': 0, 'Seal': 0, 'Tectonic': 2, 'Bird': 0},
+            }, 1, None
+        ), (
+            {
+                1: {'Plants': 4, 'Crab': 0, 'Turtle': 0, 'Seal': 0, 'Tectonic': 2, 'Bird': 1},
+            }, 0, None
+        )
+        dm.update_board(
+            'Tectonic', 1,
+            {
+                1: {'Plants': 0, 'Crab': 0, 'Turtle': 0, 'Seal': 0, 'Tectonic': 0, 'Bird': 0},
+            }, 1, None
+        ), (
+            {
+                1: {'Plants': 0, 'Crab': 0, 'Turtle': 0, 'Seal': 0, 'Tectonic': 1, 'Bird': 0},
+            }, 1, None
+        )
 
 if __name__ == '__main__':
     unittest.main()
