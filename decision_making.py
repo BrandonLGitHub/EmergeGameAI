@@ -90,7 +90,7 @@ def affordability(feature, cost, budget):
 
 #   updates the board based off the feature move made
 #   TODO Test this function for island input
-def update_board(feature, island, islands, land_birds_count):
+def update_board(feature, island, islands, land_birds_count, tokens):
     """
     Update the board by selecting the specified island from the islands and incrementing the
     specified feature by 1
@@ -103,6 +103,8 @@ def update_board(feature, island, islands, land_birds_count):
         Dictionary containing all the islands
     :param land_birds_count: int
         Count of the birds on the mainland of the board
+    :param tokens: dict
+        Contains current toke information
 
     :return: tuple(dict[str, dict[str, int]], int)
         The updated islands and the updated count of land_birds
@@ -133,8 +135,10 @@ def update_board(feature, island, islands, land_birds_count):
                 land_birds_count -= 1
             if islands[island]['Plants'] < 4:
                 islands[island]['Plants'] += 1
+        if feature == 'Tectonic' and islands[island]['Tectonic'] == 0:
+            tokens = buy_tokens(0) #    TODO once token system is working
 
-    return islands, land_birds_count
+    return islands, land_birds_count, tokens
 
 
 #   updates the budget based of the cost of a feature
