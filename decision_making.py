@@ -1,11 +1,12 @@
 from dice_functions import dice_budget
 import move_forecasting as forecast
 import copy
+import tokens
 from modifier_functions import flatten, sort_dict
 
 
 #   Makes turn decisions based off available feature moves
-def spend_dice(islands, modifiers, dice, land_birds, tokens):
+def spend_dice(islands, modifiers, dice, land_birds, tokens_held):
     """
     Purchases the features with the greatest point values that are afforable using the dice rolled
 
@@ -17,7 +18,7 @@ def spend_dice(islands, modifiers, dice, land_birds, tokens):
         Contains the dice remaining, int, the dice hand, list[], and saved dice, list[].
     :param land_birds: int
         Represents the number of birds on the mainland.
-    :param tokens: #TODO add tokens
+    :param tokens_held: #TODO add tokens_held
         Dictionary containing the tokens owned.
 
     :return: tuple(dict[str, dict[str, int]], int, list[int], #TODO add tokens
@@ -38,8 +39,8 @@ def spend_dice(islands, modifiers, dice, land_birds, tokens):
     >>>         'saved_dice': []
     >>>      }
     >>> land_birds = 2
-    >>> tokens = None
-    >>> spend_dice(islands, modifiers, dice, land_birds, tokens)
+    >>> tokens_held = None
+    >>> spend_dice(islands, modifiers, dice, land_birds, tokens_held)
     #   TODO add result
     """
     #   determines the point values of every possible move
@@ -48,13 +49,13 @@ def spend_dice(islands, modifiers, dice, land_birds, tokens):
     sorted_weights = forecast.sort_weights(weights)
     budget = dice_budget(modifiers, dice['dice_result'], dice['dice_amt'])
     for feature, score, island in sorted_weights:
-        cost = check_cost(feature, island, islands, land_birds, tokens)
+        cost = check_cost(feature, island, islands, land_birds, tokens_held)
         if affordability(feature, cost, budget):
-            islands, land_birds = update_board(feature, island, islands, land_birds)
+            islands, land_birds = update_board(feature, island, islands, land_birds, )
             budget = update_budget(feature, cost, budget, modifiers)
-    tokens = buy_tokens(dice)
+    tokens_held = tokens.buy_tokens(dice)
     saved_dice = save_dice(weights, dice)
-    return islands, land_birds, saved_dice, tokens
+    return islands, land_birds, saved_dice, tokens_held
 
 
 #   checks the budget to see if a feature can be purchased
@@ -90,7 +91,7 @@ def affordability(feature, cost, budget):
 
 #   updates the board based off the feature move made
 #   TODO Test this function for island input
-def update_board(feature, island, islands, land_birds_count, tokens):
+def update_board(feature, island, islands, land_birds_count=0, tokens_held=None):
     """
     Update the board by selecting the specified island from the islands and incrementing the
     specified feature by 1
@@ -103,7 +104,7 @@ def update_board(feature, island, islands, land_birds_count, tokens):
         Dictionary containing all the islands
     :param land_birds_count: int
         Count of the birds on the mainland of the board
-    :param tokens: dict
+    :param tokens_held: dict
         Contains current toke information
 
     :return: tuple(dict[str, dict[str, int]], int)
@@ -120,7 +121,8 @@ def update_board(feature, island, islands, land_birds_count, tokens):
     >>>    4: {'Plants': 2, 'Crab': 1, 'Turtle': 1, 'Seal': 0, 'Tectonic': 1, 'Bird': 1},
     >>> }
     >>> land_birds_count = 2
-    >>> update_board(feature, island, islands, land_birds_count)
+    >>> tokens_held = None
+    >>> update_board(feature,island,islands,land_birds_count,tokens_held)
     {
         1: {'Plants': 1, 'Crab': 1, 'Turtle': 0, 'Seal': 0, 'Tectonic': 1, 'Bird': 0},
         2: {'Plants': 0, 'Crab': 0, 'Turtle': 0, 'Seal': 0, 'Tectonic': 1, 'Bird': 0},
@@ -136,9 +138,9 @@ def update_board(feature, island, islands, land_birds_count, tokens):
             if islands[island]['Plants'] < 4:
                 islands[island]['Plants'] += 1
         if feature == 'Tectonic' and islands[island]['Tectonic'] == 0:
-            tokens = buy_tokens(0) #    TODO once token system is working
+            tokens_held = tokens.buy_tokens(0)  # TODO once token system is working
 
-    return islands, land_birds_count, tokens
+    return islands, land_birds_count, tokens_held
 
 
 #   updates the budget based of the cost of a feature
@@ -216,7 +218,7 @@ def update_dicehand(feature, cost, hand, modifiers):
 
 
 #   checks the islands and research tokens to determine the cost of a feature
-def check_cost(feature, island, islands, land_birds, tokens):
+def check_cost(feature, island, islands, land_birds, tokens_held):
     """
     Returns the cost of updating a given feature based off the chosen island's configuration, any research token
     discounts, and for the Bird feature, checks to see if there are birds on the mainland.
@@ -229,7 +231,7 @@ def check_cost(feature, island, islands, land_birds, tokens):
         Dictionary containing all the islands' configurations
     :param land_birds: int
         Represents the birds remaining on the mainland which can be purchased at a lower cost.
-    :param tokens:# TODO create tokens type
+    :param tokens_held:# TODO create tokens type
 
 
     :return: int
@@ -246,13 +248,13 @@ def check_cost(feature, island, islands, land_birds, tokens):
     >>>                  4: {'Plants': 2, 'Crab': 1, 'Turtle': 1, 'Seal': 0, 'Tectonic': 1, 'Bird': 1},
     >>>                }
     >>> land_birds = 2
-    >>> tokens = None
-    >>> check_cost(feature, island, islands, land_birds, tokens)
+    >>> tokens_held = None
+    >>> check_cost(feature, island, islands, land_birds, tokens_held)
     2
 
     """
     #   checks to see if there is a research token that would change the price
-    cost = use_token(tokens, feature)
+    cost = tokens.use_token(tokens_held, feature)
     #   dictionary establishing the price of features that do no change based off board status
     fxd_prices = {'Crab': 2, 'Turtle': 3, 'Seal': 4}
     #   checks the price if there was no token applicable
@@ -277,16 +279,6 @@ def check_cost(feature, island, islands, land_birds, tokens):
         else:
             cost = fxd_prices[feature]
     return cost
-
-
-#   TODO checks research tokens to see if they are usable for this round
-def use_token(tokens, feature: object = None) -> object:
-    return None
-
-
-#   TODO create function that purchases tokens
-def buy_tokens(dice):
-    return None
 
 
 #   TODO create function that saves any dice that contribute to the highest weighted feature move

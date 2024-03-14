@@ -42,13 +42,13 @@ class test_move_forecasting(unittest.TestCase):
                     1: {'Plants': 1, 'Crab': 0, 'Turtle': 0, 'Seal': 0, 'Tectonic': 1, 'Bird': 0},
                     2: {'Plants': 0, 'Crab': 0, 'Turtle': 0, 'Seal': 0, 'Tectonic': 1, 'Bird': 0},
                     3: {'Plants': 3, 'Crab': 1, 'Turtle': 0, 'Seal': 0, 'Tectonic': 2, 'Bird': 0},
-                    4: {'Plants': 2, 'Crab': 1, 'Turtle': 1, 'Seal': 0, 'Tectonic': 1, 'Bird': 1}
+                    4: {'Plants': 4, 'Crab': 1, 'Turtle': 1, 'Seal': 0, 'Tectonic': 1, 'Bird': 0}
                 }
             ), {
                 1: {'Plants': 1, 'Crab': 1, 'Tectonic': 1, 'Bird': 2},
                 2: {'Plants': 1, 'Tectonic': 0, 'Bird': 2},
-                3: {'Turtle': 1, 'Tectonic': 4, 'Bird': 2},
-                4: {'Plants': 1, 'Seal': 4, 'Tectonic': 5}
+                3: {'Turtle': 2, 'Tectonic': 4, 'Bird': 4},
+                4: {'Seal': 4, 'Tectonic': 6, 'Bird': 1}
             }
         )
 

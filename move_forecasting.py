@@ -1,5 +1,6 @@
 import copy
-from scoring import island_score
+import scoring
+import decision_making as dm
 from typing import Any
 
 
@@ -38,11 +39,11 @@ def weigh_moves(islands):
             for feature in possible_moves:
                 #   calculates the point value of all possible feature moves
                 if possible_moves[feature] == 1:
-                    next_board = copy.deepcopy(islands[island])
+                    next_board = copy.deepcopy(islands)
                     # increases the value of the possible move's feature to calculate the score from making that feature
                     #   TODO Test using update_board() to see the score impact
-                    next_board[feature] += 1
-                    points = island_score(next_board) - island_score(islands[island])
+                    next_board = dm.update_board(feature, island, next_board)[0]
+                    points = scoring.get_score(next_board) - scoring.get_score(islands)
                     move_weights[feature] = points
         #   saves the feature weights to its corresponding island
         island_weights[island] = move_weights
