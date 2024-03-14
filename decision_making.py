@@ -2,7 +2,6 @@ from dice_functions import dice_budget
 import move_forecasting as forecast
 import copy
 import tokens
-from modifier_functions import flatten, sort_dict
 
 
 #   Makes turn decisions based off available feature moves
