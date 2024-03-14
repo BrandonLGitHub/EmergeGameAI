@@ -9,18 +9,13 @@ def set_modifiers(modifiers, islands):  # can this be broken into other function
     new_modifiers = copy.deepcopy(default_modifiers)
     #   determines the points gained from making each move
     weights = forecast.weigh_moves(islands)
-    #   checks if moves are possible
-    move_set = forecast.check_moves(islands)
-    #   creates a dictionary containing how uncommon a move's availability is
-    move_possibilities = forecast.move_possibility(move_set)
-    #   selects the two least likely move to be replaced
-    replace_modifiers = extract_two_highest_values(move_possibilities)
-    #   places the weights of all moves in a single dictionary
-    all_weights = flatten(weights)
-    #   selects the move with the highest point value
-    chosen_modifiers = extract_two_highest_values(all_weights)
-
-    for feature, replace_feature in zip(chosen_modifiers, replace_modifiers):  # look into enumerate for this function
+    #   totals up the weights by feature
+    weight_total_per_feature = forecast.sum_feature_weights(weights)
+    #   selects the two moves with the lowest point values
+    replace_modifiers = extract_two_lowest_values(weight_total_per_feature)
+    #   selects the moves with the two highest point value
+    chosen_modifiers = extract_two_highest_values(weight_total_per_feature)
+    for feature, replace_feature in zip(chosen_modifiers, replace_modifiers):
         if len(current_modifiers[feature]) < 2:
             dice_number = default_modifiers[replace_feature][0]
             new_modifiers[replace_feature] = []
@@ -30,18 +25,25 @@ def set_modifiers(modifiers, islands):  # can this be broken into other function
 
 #   takes a sorted dictionary and extracts the two highest values
 def extract_two_highest_values(dictionary):
-    sorted_dict = sort_dict(dictionary)
-    highest_two_values = [value[0] for value in sorted_dict]
-    return highest_two_values
+    sorted_dict = sort_dict_dec(dictionary)
+    highest_keys = [item[0] for item in sorted_dict[:2]]
+    return highest_keys
 
 
 def extract_two_lowest_values(dictionary):
-    sorted_dict = sort_dict(dictionary)
+    sorted_dict = sort_dict_asc(dictionary)
+    lowest_keys = [item[0] for item in sorted_dict[:2]]
+    return lowest_keys
 
 
 #   sorts a dictionary by descending values
-def sort_dict(dictionary):
+def sort_dict_dec(dictionary):
     sorted_dict = sorted(dictionary.items(), key=lambda x: x[1], reverse=True)
+    return sorted_dict
+
+
+def sort_dict_asc(dictionary):
+    sorted_dict = sorted(dictionary.items(), key=lambda x: x[1])
     return sorted_dict
 
 
