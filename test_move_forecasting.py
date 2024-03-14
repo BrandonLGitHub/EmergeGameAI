@@ -52,5 +52,17 @@ class test_move_forecasting(unittest.TestCase):
             }
         )
 
+    def test_sum_feature_weights(self):
+        self.assertEqual(
+            forecast.sum_feature_weights(
+                {
+                    1: {'Plants': 1, 'Crab': 1, 'Tectonic': 1, 'Bird': 2},
+                    2: {'Plants': 1, 'Tectonic': 0, 'Bird': 2},
+                    3: {'Turtle': 2, 'Tectonic': 4, 'Bird': 4},
+                    4: {'Seal': 4, 'Tectonic': 6, 'Bird': 1}
+                }
+            ),  {'Plants': 2, 'Crab': 1, 'Turtle': 2, 'Seal': 4, 'Tectonic': 11, 'Bird': 9}
+        )
+
 if __name__ == '__main__':
     unittest.main()

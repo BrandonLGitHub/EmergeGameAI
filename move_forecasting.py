@@ -50,6 +50,13 @@ def weigh_moves(islands):
     return island_weights
 
 
+def sum_feature_weights(weights):
+    feature_totals = {'Plants': 0, 'Crab': 0, 'Turtle': 0, 'Seal': 0, 'Tectonic': 0, 'Bird': 0}
+    for island, features in weights.items():
+        for feature, weight in features.items():
+            feature_totals[feature] += weight
+    return feature_totals
+
 #   sorts the weights into a list of tuples in descending score order
 def sort_weights(weights):
     all_weights = []
