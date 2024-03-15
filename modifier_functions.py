@@ -3,8 +3,7 @@ import move_forecasting as forecast
 
 
 #   sets the modifiers to the feature that will give you the highest point value
-def set_modifiers(modifiers, islands):  # can this be broken into other functions
-    current_modifiers = copy.deepcopy(modifiers)
+def set_modifiers(islands):  # can this be broken into other functions
     default_modifiers = {'Plants': [1], 'Crab': [2], 'Turtle': [3], 'Seal': [4], 'Tectonic': [5], 'Bird': [6]}
     new_modifiers = copy.deepcopy(default_modifiers)
     #   determines the points gained from making each move
@@ -16,11 +15,11 @@ def set_modifiers(modifiers, islands):  # can this be broken into other function
     #   selects the moves with the two highest point value
     chosen_modifiers = extract_two_highest_values(weight_total_per_feature)
     for feature, replace_feature in zip(chosen_modifiers, replace_modifiers):
-        if len(current_modifiers[feature]) < 2:
+        if len(new_modifiers[feature]) < 2:
             dice_number = default_modifiers[replace_feature][0]
             new_modifiers[replace_feature] = []
             new_modifiers[feature].append(dice_number)
-    return current_modifiers
+    return new_modifiers
 
 
 #   takes a sorted dictionary and extracts the two highest values
