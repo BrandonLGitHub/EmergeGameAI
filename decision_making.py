@@ -46,13 +46,15 @@ def spend_dice(islands, modifiers, dice, land_birds, tokens_held):
     weights = forecast.weigh_moves(islands)
     #   sorts the weights in descending order and returns a list of tuples with the corresponding feature and island
     sorted_weights = forecast.sort_weights(weights)
-    budget = dice_budget(modifiers, dice['dice_result'], dice['dice_amt'])
+    budget = dice_budget(modifiers, dice['roll_result'], dice['dice_amt'])
     for feature, score, island in sorted_weights:
         cost = check_cost(feature, island, islands, land_birds, tokens_held)
         if affordability(feature, cost, budget):
-            islands, land_birds = update_board(feature, island, islands, land_birds, )
+            islands, land_birds, tokens_held = update_board(feature, island, islands, land_birds, tokens_held)
             budget = update_budget(feature, cost, budget, modifiers)
+    #   TODO buy_tokens()
     tokens_held = tokens.buy_tokens(dice)
+    #   TODO save_dice()
     saved_dice = save_dice(weights, dice)
     return islands, land_birds, saved_dice, tokens_held
 
