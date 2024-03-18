@@ -50,8 +50,9 @@ def spend_dice(islands, modifiers, dice, land_birds, tokens_held):
     for feature, score, island in sorted_weights:
         cost = check_cost(feature, island, islands, land_birds, tokens_held)
         if affordability(feature, cost, budget):
-            islands, land_birds = update_board(feature, island, islands, land_birds, )
+            islands, land_birds, tokens_held = update_board(feature, island, islands, land_birds, tokens_held)
             budget = update_budget(feature, cost, budget, modifiers)
+    #   TODO create these functions
     tokens_held = tokens.buy_tokens(dice)
     saved_dice = save_dice(weights, dice)
     return islands, land_birds, saved_dice, tokens_held
@@ -89,7 +90,6 @@ def affordability(feature, cost, budget):
 
 
 #   updates the board based off the feature move made
-#   TODO Test this function for island input
 def update_board(feature, island, islands, land_birds_count=0, tokens_held=None):
     """
     Update the board by selecting the specified island from the islands and incrementing the
