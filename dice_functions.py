@@ -57,10 +57,16 @@ def roll_dice(dice_amt, saved_dice):
     * representing any number between 1 & 6.
     """
     # Generates rolls for the dice
-    rollable_dice = dice_amt - len(saved_dice)
+    try:
+        rollable_dice = dice_amt - len(saved_dice)
+    except TypeError:
+        rollable_dice = dice_amt
     dice_rolled: list[int] = [random.randint(1, 6) for x in range(rollable_dice)]
     # adds saved dice back into the dice hand
-    dice_rolled.extend(saved_dice)
+    try:
+        dice_rolled.extend(saved_dice)
+    except TypeError:
+        pass
     return dice_rolled
 
 
