@@ -11,6 +11,7 @@ def game_runner():
     #   initial modifier set up
     modifiers = {'Plants': [1], 'Crab': [2], 'Turtle': [3], 'Seal': [4], 'Tectonic': [5], 'Bird': [6]},
     #   initial island settings
+    #   TODO create an island class?
     islands = {
         1: {'Plants': 1, 'Crab': 0, 'Turtle': 0, 'Seal': 0, 'Tectonic': 1, 'Bird': 0},
         2: {'Plants': 0, 'Crab': 0, 'Turtle': 0, 'Seal': 0, 'Tectonic': 1, 'Bird': 0},
@@ -19,6 +20,7 @@ def game_runner():
     },
     land_birds = 4,
     current_round = 0
+    #   TODO make into a class for dice hand?
     dice: dict[str, list[Any] | int | Any] = {   #   make sure all uses of this are found
             'dice_amt': 6,
             'roll_result': [],

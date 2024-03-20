@@ -2,6 +2,7 @@ import random
 
 
 #   takes the dice roll and totals up the amount of each feature's associated number(s) from the dice in hand
+#   TODO consider making this a class
 def dice_budget(modifiers, dice_hand, dice_amt):  # modify this to take the modifiers directly as an input
     """
     Totals the amount of dice in the dice hand that can go towards purchasing each feature.
