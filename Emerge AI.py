@@ -17,9 +17,10 @@ def game_runner():
         2: {'Plants': 0, 'Crab': 0, 'Turtle': 0, 'Seal': 0, 'Tectonic': 1, 'Bird': 0},
         3: {'Plants': 3, 'Crab': 1, 'Turtle': 0, 'Seal': 0, 'Tectonic': 2, 'Bird': 0},
         4: {'Plants': 2, 'Crab': 1, 'Turtle': 1, 'Seal': 0, 'Tectonic': 1, 'Bird': 1}
-    },
-    land_birds = 4,
+    }
+    land_birds = 4
     current_round = 0
+    tokens_held = None
     #   TODO make into a class for dice hand?
     dice: dict[str, list[Any] | int | Any] = {   #   make sure all uses of this are found
             'dice_amt': 6,
@@ -27,14 +28,14 @@ def game_runner():
             'saved_dice': []
     }
 
-    while current_round < 1:
+    while current_round < 8:
         current_round += 1
         print(f"Round {current_round} has begun!\n")
-        modifiers = mod.set_modifiers(modifiers, islands)
+        modifiers = mod.set_modifiers(islands)
         # sets dice based off of round number
         dice['dice_amt'] = dice_func.dice_count(current_round)
         dice['roll_result'] = dice_func.roll_dice(dice['dice_amt'], dice['saved_dice'])
-        islands, land_birds = decide.spend_dice(islands, modifiers, dice, land_birds)
+        islands, land_birds, dice['saved_dice'], tokens_held = decide.spend_dice(islands, modifiers, dice, land_birds, tokens_held)
         print(f'End of round {current_round}')
 
 
