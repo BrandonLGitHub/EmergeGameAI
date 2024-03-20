@@ -1,10 +1,9 @@
 from typing import Dict, List, Any
-
+import scoring as score
 import decision_making as decide
-import move_forecasting as forecast
 import modifier_functions as mod
 import dice_functions as dice_func
-import scoring as score
+import sys
 
 
 def game_runner():
@@ -14,9 +13,9 @@ def game_runner():
     #   TODO create an island class?
     islands = {
         1: {'Plants': 1, 'Crab': 0, 'Turtle': 0, 'Seal': 0, 'Tectonic': 1, 'Bird': 0},
-        2: {'Plants': 0, 'Crab': 0, 'Turtle': 0, 'Seal': 0, 'Tectonic': 1, 'Bird': 0},
-        3: {'Plants': 3, 'Crab': 1, 'Turtle': 0, 'Seal': 0, 'Tectonic': 2, 'Bird': 0},
-        4: {'Plants': 2, 'Crab': 1, 'Turtle': 1, 'Seal': 0, 'Tectonic': 1, 'Bird': 1}
+        2: {'Plants': 0, 'Crab': 0, 'Turtle': 0, 'Seal': 0, 'Tectonic': 0, 'Bird': 0},
+        3: {'Plants': 0, 'Crab': 0, 'Turtle': 0, 'Seal': 0, 'Tectonic': 0, 'Bird': 0},
+        4: {'Plants': 0, 'Crab': 0, 'Turtle': 0, 'Seal': 0, 'Tectonic': 0, 'Bird': 0}
     }
     land_birds = 4
     current_round = 0
@@ -32,11 +31,28 @@ def game_runner():
         current_round += 1
         print(f"Round {current_round} has begun!\n")
         modifiers = mod.set_modifiers(islands)
+        print("My modifiers are all set! Once you have set yours let's continue.\nIf its your turn to go first, Take "
+              "your turn now and then you can tell me to go :)")
+        player_turn()
         # sets dice based off of round number
         dice['dice_amt'] = dice_func.dice_count(current_round)
         dice['roll_result'] = dice_func.roll_dice(dice['dice_amt'], dice['saved_dice'])
         islands, land_birds, dice['saved_dice'], tokens_held = decide.spend_dice(islands, modifiers, dice, land_birds, tokens_held)
-        print(f'End of round {current_round}')
+        print(f'End of round {current_round}\n')
+
+    final_score = score.get_score(islands)
+    print(f"Great game!!! My final score was {final_score}. I hope you had as much fun as I did. I'll be waiting for a "
+          f"rematch!")
+
+def player_turn():
+    response = input("Enter 'Y' to continue or 'q' to quit the game.\n").strip().lower()
+    if response == 'y':
+        return
+    elif response == 'q':
+        sys.exit()
+    else:
+        print('Invalid response. Please enter "Y" to continue or "q" to quit the game.')
+        player_turn()
 
 
 if __name__ == '__main__':

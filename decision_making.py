@@ -1,4 +1,5 @@
 from dice_functions import dice_budget
+from sandy_ai import player_turn
 import move_forecasting as forecast
 import copy
 import tokens
@@ -52,6 +53,10 @@ def spend_dice(islands, modifiers, dice, land_birds, tokens_held):
         if affordability(feature, cost, budget):
             islands, land_birds, tokens_held = update_board(feature, island, islands, land_birds, tokens_held)
             budget = update_budget(feature, cost, budget, modifiers)
+            print(f'\nI spent my dice on the {feature} feature for island number {island}!')
+            print("That's the end of my turn. Let me know when you have completed yours.\n")
+            player_turn()
+
     #   TODO buy_tokens()
     tokens_held = tokens.buy_tokens(dice)
     #   TODO save_dice()
