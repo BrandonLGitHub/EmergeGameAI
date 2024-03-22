@@ -12,5 +12,5 @@ def use_token(tokens, feature: object = None) -> object:
 
 
 #   TODO create function that purchases tokens
-def buy_tokens(dice):
+def buy_tokens(tokens_held, dice):
     return None

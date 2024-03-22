@@ -49,18 +49,15 @@ def spend_dice(islands, modifiers, dice, land_birds, tokens_held):
     sorted_weights = forecast.sort_weights(weights)
     budget = dice_budget(modifiers, dice['roll_result'], dice['dice_amt'])
     for feature, score, island in sorted_weights:
-        cost = check_cost(feature, island, islands, land_birds, tokens_held)
+        cost, token_cost = check_cost(feature, island, islands, land_birds, tokens_held)
         if affordability(feature, cost, budget):
+            tokens_held = token_cost
             islands, land_birds, tokens_held = update_board(feature, island, islands, land_birds, tokens_held)
             budget = update_budget(feature, cost, budget, modifiers)
             print(f'\nI spent my dice on the {feature} feature for island number {island}!')
             print("That's the end of my turn. Let me know when you have completed yours.\n")
             player_turn()
-
-    #   TODO buy_tokens()
-    tokens_held = tokens.buy_tokens(dice)
-    #   TODO save_dice()
-    saved_dice = save_dice(weights, dice)
+    saved_dice = budget['dice_hand']
     return islands, land_birds, saved_dice, tokens_held
 
 
@@ -224,7 +221,7 @@ def update_dicehand(feature, cost, hand, modifiers):
 
 
 #   checks the islands and research tokens to determine the cost of a feature
-def check_cost(feature, island, islands, land_birds, tokens_held):
+def check_cost(feature, island, islands, land_birds, tokens_held = None):
     """
     Returns the cost of updating a given feature based off the chosen island's configuration, any research token
     discounts, and for the Bird feature, checks to see if there are birds on the mainland.
@@ -260,7 +257,7 @@ def check_cost(feature, island, islands, land_birds, tokens_held):
 
     """
     #   checks to see if there is a research token that would change the price
-    cost = tokens.use_token(tokens_held, feature)
+    cost, tokens_held = tokens.use_token(tokens_held, feature)
     #   dictionary establishing the price of features that do no change based off board status
     fxd_prices = {'Crab': 2, 'Turtle': 3, 'Seal': 4}
     #   checks the price if there was no token applicable
@@ -284,7 +281,7 @@ def check_cost(feature, island, islands, land_birds, tokens_held):
         #   if the feature is not a variable priced feature, selects the feature and its price from the dictionary
         else:
             cost = fxd_prices[feature]
-    return cost
+    return cost, tokens_held
 
 
 #   TODO create function that saves any dice that contribute to the highest weighted feature move

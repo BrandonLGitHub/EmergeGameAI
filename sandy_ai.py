@@ -1,5 +1,6 @@
 from typing import Dict, List, Any
 import scoring as score
+import tokens
 import decision_making as decide
 import modifier_functions as mod
 import dice_functions as dice_func
@@ -38,11 +39,13 @@ def game_runner():
         dice['dice_amt'] = dice_func.dice_count(current_round)
         dice['roll_result'] = dice_func.roll_dice(dice['dice_amt'], dice['saved_dice'])
         islands, land_birds, dice['saved_dice'], tokens_held = decide.spend_dice(islands, modifiers, dice, land_birds, tokens_held)
+        tokens_held, dice['saved_dice'] = tokens.buy_tokens(tokens_held, dice['saved_dice'])
         print(f'End of round {current_round}\n')
 
     final_score = score.get_score(islands)
     print(f"Great game!!! My final score was {final_score}. I hope you had as much fun as I did. I'll be waiting for a "
           f"rematch!")
+
 
 def player_turn():
     response = input("Enter 'Y' to continue or 'q' to quit the game.\n").strip().lower()
