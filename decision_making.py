@@ -237,8 +237,8 @@ def check_cost(feature, island, islands, land_birds, tokens_held = None):
     :param tokens_held:# TODO create tokens type
 
 
-    :return: int
-        The cost of upgrading the chosen feature on the chosen island
+    :return: tuple(int, dict)
+        The cost of upgrading the chosen feature on the chosen island and a new tokens dict incase it was modified
 
     :example:
 
@@ -253,7 +253,7 @@ def check_cost(feature, island, islands, land_birds, tokens_held = None):
     >>> land_birds = 2
     >>> tokens_held = None
     >>> check_cost(feature, island, islands, land_birds, tokens_held)
-    2
+    2, None
 
     """
     #   checks to see if there is a research token that would change the price
