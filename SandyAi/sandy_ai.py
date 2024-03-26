@@ -1,9 +1,9 @@
 from typing import Dict, List, Any
 import scoring as score
 import tokens
-import decision_making as decide
-import modifier_functions as mod
-import dice_functions as dice_func
+import decide as dm
+import modifiers as mod
+import dice as dice_func
 import sys
 
 
@@ -38,7 +38,7 @@ def game_runner():
         # sets dice based off of round number
         dice['dice_amt'] = dice_func.dice_count(current_round)
         dice['roll_result'] = dice_func.roll_dice(dice['dice_amt'], dice['saved_dice'])
-        islands, land_birds, dice['saved_dice'], tokens_held = decide.spend_dice(islands, modifiers, dice, land_birds, tokens_held)
+        islands, land_birds, dice['saved_dice'], tokens_held = dm.spend_dice(islands, modifiers, dice, land_birds, tokens_held)
         tokens_held, dice['saved_dice'] = tokens.buy_tokens(tokens_held, dice['saved_dice'])
         print(f'End of round {current_round}\n')
 

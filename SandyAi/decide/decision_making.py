@@ -1,8 +1,8 @@
-from dice_functions import dice_budget
-from sandy_ai import player_turn
-import move_forecasting as forecast
+from ..dice import dice_budget
+from ..sandy_ai import player_turn
+from .. import forecasting
 import copy
-import tokens
+from .. import tokens
 
 
 #   Makes turn decisions based off available feature moves
@@ -44,9 +44,9 @@ def spend_dice(islands, modifiers, dice, land_birds, tokens_held):
     #   TODO add result
     """
     #   determines the point values of every possible move
-    weights = forecast.weigh_moves(islands)
+    weights = forecasting.weigh_moves(islands)
     #   sorts the weights in descending order and returns a list of tuples with the corresponding feature and island
-    sorted_weights = forecast.sort_weights(weights)
+    sorted_weights = forecasting.sort_weights(weights)
     budget = dice_budget(modifiers, dice['roll_result'], dice['dice_amt'])
     for feature, score, island in sorted_weights:
         cost, token_cost = check_cost(feature, island, islands, land_birds, tokens_held)
