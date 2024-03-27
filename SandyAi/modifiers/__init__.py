@@ -1,1 +1,1 @@
-from modifier_functions import set_modifiers
+from SandyAi.modifiers.modifier_functions import set_modifiers
