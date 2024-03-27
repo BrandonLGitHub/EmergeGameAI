@@ -1,9 +1,6 @@
-from typing import Dict, List, Any
-import scoring as score
+from typing import Any
 import tokens
-import decide as dm
-import modifiers as mod
-import dice as dice_func
+from SandyAi import decide as dm, dice as dice_func, modifiers as mod, scoring as score
 import sys
 
 

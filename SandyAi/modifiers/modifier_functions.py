@@ -1,5 +1,5 @@
 import copy
-from .. import forecasting as forecast
+import forecasting as forecast
 
 
 #   sets the modifiers to the feature that will give you the highest point value

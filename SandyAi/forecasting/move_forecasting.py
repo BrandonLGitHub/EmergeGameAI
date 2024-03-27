@@ -1,6 +1,6 @@
 import copy
-from .. import scoring
-from .. import decide as dm
+import scoring
+import decide as dm
 
 
 #   takes all possible feature moves and determines the point values associated with them

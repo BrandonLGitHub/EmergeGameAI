@@ -1,5 +1,5 @@
 import unittest
-import scoring as score
+from scoring import scoring as score
 
 
 class test_scoring(unittest.TestCase):

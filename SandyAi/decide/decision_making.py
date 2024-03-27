@@ -1,8 +1,8 @@
-from ..dice import dice_budget
-from ..sandy_ai import player_turn
-from .. import forecasting
+from dice import dice_budget
+from sandy_ai import player_turn
+import forecasting
 import copy
-from .. import tokens
+import tokens
 
 
 #   Makes turn decisions based off available feature moves

@@ -1,1 +1,1 @@
-from scoring import get_score
+from scoring.scoring import get_score
