@@ -1,1 +1,1 @@
-from scoring.scoring import get_score
+from SandyAi.scoring.scoring import get_score

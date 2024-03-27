@@ -1,6 +1,5 @@
 import copy
-import scoring
-import decide as dm
+from SandyAi import decide as dm, scoring
 
 
 #   takes all possible feature moves and determines the point values associated with them

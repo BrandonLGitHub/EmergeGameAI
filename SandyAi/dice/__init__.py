@@ -1,1 +1,1 @@
-from dice_functions import *
+from SandyAi.dice.dice_functions import *

@@ -1,5 +1,5 @@
 import copy
-import forecasting as forecast
+from SandyAi import forecasting as forecast
 
 
 #   sets the modifiers to the feature that will give you the highest point value
