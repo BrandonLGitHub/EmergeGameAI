@@ -42,7 +42,7 @@ class test_decision_making(unittest.TestCase):
                               3: {'Plants': 3, 'Crab': 1, 'Turtle': 0, 'Seal': 0, 'Tectonic': 2, 'Bird': 0},
                               4: {'Plants': 2, 'Crab': 1, 'Turtle': 1, 'Seal': 0, 'Tectonic': 1, 'Bird': 1},
                           }, 2, None
-                          ), 4
+                          ), (4, None)
         )
         self.assertEqual(
             dm.check_cost('Bird', 1,
@@ -52,7 +52,7 @@ class test_decision_making(unittest.TestCase):
                               3: {'Plants': 3, 'Crab': 1, 'Turtle': 0, 'Seal': 0, 'Tectonic': 2, 'Bird': 0},
                               4: {'Plants': 2, 'Crab': 1, 'Turtle': 1, 'Seal': 0, 'Tectonic': 1, 'Bird': 1},
                           }, 2, None
-                          ), 2
+                          ), (2, None)
         )
         self.assertEqual(
             dm.check_cost('Bird', 1,
@@ -62,7 +62,7 @@ class test_decision_making(unittest.TestCase):
                               3: {'Plants': 3, 'Crab': 1, 'Turtle': 0, 'Seal': 0, 'Tectonic': 2, 'Bird': 0},
                               4: {'Plants': 2, 'Crab': 1, 'Turtle': 1, 'Seal': 0, 'Tectonic': 1, 'Bird': 1},
                           }, 0, None
-                          ), 3
+                          ), (3, None)
         )
         self.assertEqual(
             dm.check_cost('Plants', 1,
@@ -72,7 +72,7 @@ class test_decision_making(unittest.TestCase):
                               3: {'Plants': 3, 'Crab': 1, 'Turtle': 0, 'Seal': 0, 'Tectonic': 2, 'Bird': 0},
                               4: {'Plants': 2, 'Crab': 1, 'Turtle': 1, 'Seal': 0, 'Tectonic': 1, 'Bird': 1},
                           }, 2, None
-                          ), 2
+                          ), (2, None)
         )
 
         #   TODO add tests for tokens once that system is built out
@@ -121,7 +121,7 @@ class test_decision_making(unittest.TestCase):
                 {
                     1: {'Plants': 2, 'Crab': 0, 'Turtle': 0, 'Seal': 0, 'Tectonic': 2, 'Bird': 1},
                     2: {'Plants': 2, 'Crab': 1, 'Turtle': 0, 'Seal': 0, 'Tectonic': 2, 'Bird': 1}
-                }, 0, None, None
+                }, 0, [1, 3], None
             )
         )
 

@@ -1,7 +1,7 @@
 from SandyAi.dice import dice_budget
-from SandyAi.sandy_ai import player_turn
 from SandyAi import forecasting, tokens
 import copy
+import sys
 
 
 #   Makes turn decisions based off available feature moves
@@ -256,7 +256,9 @@ def check_cost(feature, island, islands, land_birds, tokens_held = None):
 
     """
     #   checks to see if there is a research token that would change the price
-    cost, tokens_held = tokens.use_token(tokens_held, feature)
+    #   TODO Token system
+    #   cost = tokens.use_token(tokens_held, feature)
+    cost = None
     #   dictionary establishing the price of features that do no change based off board status
     fxd_prices = {'Crab': 2, 'Turtle': 3, 'Seal': 4}
     #   checks the price if there was no token applicable
@@ -286,3 +288,16 @@ def check_cost(feature, island, islands, land_birds, tokens_held = None):
 #   TODO create function that saves any dice that contribute to the highest weighted feature move
 def save_dice(weights, dice):
     return None
+
+
+#   TODO docstrings and Test case
+def player_turn():
+    response = input("Enter 'Y' to continue or 'q' to quit the game.\n").strip().lower()
+    if response == 'y':
+        return
+    elif response == 'q':
+        sys.exit()
+    else:
+        print('Invalid response. Please enter "Y" to continue or "q" to quit the game.')
+        player_turn()
+
