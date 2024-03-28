@@ -1,6 +1,6 @@
 from typing import Any
 import SandyAi.tokens as tokens
-from SandyAi import decide as dm, dice as dice_func, modifiers as mod, scoring as score
+from SandyAi import decide as dm, dice as dice_func, modifiers as mod, scoring as score, tokens
 
 
 # TODO docstrings
