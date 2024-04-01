@@ -13,10 +13,27 @@ def use_token(tokens, feature: object = None) -> object:
 
 
 #   TODO create function that purchases tokens
-def buy_tokens(tokens_held, dice, token_bank):
-    if dice >= 2:
+def buy_tokens(tokens_held, dice_count, token_bank):
+    '''
+    Purchases a token(s) based of dice amount and the token selected
+    :param tokens_held:
+    :param dice_count:
+    :param token_bank:
+    :return:
+    '''
+    while dice_count >= 2:
         feature = get_feature()
         number = get_num(feature, token_bank)
+        bought_token = extract_token(token_bank, feature, number)
+        tokens_held.append(bought_token)
+        dice_count -= 2
+    return tokens_held, dice_count
+
+
+def extract_token(token_bank, chosen_feature, chosen_num):
+    for token in token_bank:
+        if token.feature == chosen_feature and token.num == chosen_num:
+            return token
     return None
 
 
@@ -45,25 +62,29 @@ def get_feature():
         get_feature()
 
 
-def get_num(feature, token_bank):
+def get_num(chosen_feature, token_bank):
     '''
     Gets input of what number of the token feature they are buying for Sandy
     TODO Docstring
-    :param feature:
+    :param chosen_feature:
     :return:
     '''
-    print(f'Which token for {feature} are we buying?\n')
+    print(f'Which token for {chosen_feature} are we buying?\n')
     #   TODO from the token bank exract all the tokens for the feature and list the numbers and their description
+    for token in token_bank:
+        if token.feature == chosen_feature:
+            print(f'({token.num}): {token.description}')
     number = input().strip()
-    if number == '1' and feature in ('Plants', 'Crab', 'Turtle', 'Seal', 'Bird', 'Board', 'Tectonic'):
+    if number == '1' and chosen_feature in ('Plants', 'Crab', 'Turtle', 'Seal', 'Bird', 'Board', 'Tectonic'):
         return 1
-    elif number == '2' and feature in ('Crab', 'Turtle', 'Seal', 'Bird', 'Board', 'Tectonic'):
+    elif number == '2' and chosen_feature in ('Crab', 'Turtle', 'Seal', 'Bird', 'Board', 'Tectonic'):
         return 2
-    elif number == '3' and feature in ('Crab', 'Turtle', 'Bird'):
+    elif number == '3' and chosen_feature in ('Crab', 'Turtle', 'Bird'):
         return 3
     else:
         print('Invalid response please enter one of the available numbers for your feature\n')
-        get_num(feature)
+        get_num(chosen_feature, token_bank)
+
 
 def generate_bank():
     '''
