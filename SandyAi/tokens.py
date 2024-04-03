@@ -1,3 +1,6 @@
+"""Contains functionality related to using research tokens in the game."""
+
+
 class research_token:
     def __init__(self, feature, num, effect, outcome, description):
         self.feature = feature
@@ -8,11 +11,30 @@ class research_token:
 
 
 #   TODO checks research tokens to see if they are usable for this round
-def use_token(tokens, feature: object = None) -> object:
+def use_token(tokens_held, feature: object = None, use: object = 'other'):
+    #   TODO add functionality for non-cost tokens
+    if use == 'other':
+        return None
+    elif use == 'cost':
+        cost = use_token_for_cost(tokens_held, feature)
+        return cost
+    else:
+        return None
+
+
+def use_token_for_cost(tokens_held, feature):
+    """
+    Looks for tokens for a specific feature and extracts the discounted cost for that feature if there is one.
+    :param tokens_held:
+    :param feature:
+    :return:
+    """
+    for token in tokens_held:
+        if token.feature == feature and token.effect == 'cost':
+            return token.outcome
     return None
 
 
-#   TODO create function that purchases tokens
 def buy_tokens(tokens_held, dice_count, token_bank):
     '''
     Purchases a token(s) based of dice amount and the token selected
@@ -126,7 +148,7 @@ def generate_bank():
     tectonic1 = research_token('Tectonic', 1, 'cost', 2,
                                'Grow a small island into a medium one for 2 dice.')
 
-    tectonic2 = research_token('Tectonic', 2, 'cost', 2,
+    tectonic2 = research_token('Tectonic', 2, 'cost', 3,
                                'Grow a medium island into a large one for 3 dice.')
 
     board1 = research_token('Board', 1, 'dice', None,
