@@ -12,14 +12,24 @@ class research_token:
 
 #   TODO checks research tokens to see if they are usable for this round
 def use_token(tokens_held, feature: object = None, use: object = 'other'):
+    """
+    Takes in the tokens held and the optional feature and use for the token and then uses the appropriate toke if held
+    :param tokens_held: list
+        list holding all the unused research tokens purchased during the game
+    :param feature: str
+        optional feature of the token that is to be used
+    :param use: str
+        optional use for the token
+    :return:
+    """
     #   TODO add functionality for non-cost tokens
     if use == 'other':
-        return None
+        return None, tokens_held
     elif use == 'cost':
-        cost = use_token_for_cost(tokens_held, feature)
-        return cost
+        cost, tokens_held = use_token_for_cost(tokens_held, feature)
+        return cost, tokens_held
     else:
-        return None
+        return None, tokens_held
 
 
 def use_token_for_cost(tokens_held, feature):
@@ -31,8 +41,9 @@ def use_token_for_cost(tokens_held, feature):
     """
     for token in tokens_held:
         if token.feature == feature and token.effect == 'cost':
-            return token.outcome
-    return None
+            tokens_held.remove(token)
+            return token.outcome, tokens_held
+    return None, tokens_held
 
 
 def buy_tokens(tokens_held, dice_count, token_bank):
