@@ -2,6 +2,9 @@
 
 
 class research_token:
+    """
+    Represents and contains all the relevant information of a research token, a game pieced used during play.
+    """
     def __init__(self, feature, num, effect, outcome, description):
         self.feature = feature
         self.num = num
@@ -15,11 +18,11 @@ def use_token(tokens_held, feature: object = None, use: object = 'other'):
     """
     Takes in the tokens held and the optional feature and use for the token and then uses the appropriate toke if held
     :param tokens_held: list
-        list holding all the unused research tokens purchased during the game
+        Contains all the unused research tokens purchased during the game
     :param feature: str
-        optional feature of the token that is to be used
+        Optional feature of the token that is to be used
     :param use: str
-        optional use for the token
+        Optional use for the token
     :return:
     """
     #   TODO add functionality for non-cost tokens
@@ -47,13 +50,13 @@ def use_token_for_cost(tokens_held, feature):
 
 
 def buy_tokens(tokens_held, dice_count, token_bank):
-    '''
+    """
     Purchases a token(s) based of dice amount and the token selected
     :param tokens_held:
     :param dice_count:
     :param token_bank:
     :return:
-    '''
+    """
     while dice_count >= 2:
         feature = get_feature()
         number = get_num(feature, token_bank)
@@ -64,6 +67,16 @@ def buy_tokens(tokens_held, dice_count, token_bank):
 
 
 def extract_token(token_bank, chosen_feature, chosen_num):
+    """
+    Returns the selected research token from the token bank
+    :param token_bank: list
+        Contains all the types of research tokens
+    :param chosen_feature: str
+        The feature of the desired research token
+    :param chosen_num:
+        Number of the specific research token
+    :return:
+    """
     for token in token_bank:
         if token.feature == chosen_feature and token.num == chosen_num:
             return token
@@ -71,11 +84,11 @@ def extract_token(token_bank, chosen_feature, chosen_num):
 
 
 def get_feature():
-    '''
+    """
     Gets an input from the player of what token feature they want to buy for Sandy
-    #   TODO docstring
-    :return:
-    '''
+    :return: str
+        Chosen feature of the token
+    """
     feature = input('What feature token should I buy?/n(1) Plants/n(2) Crab/n(3) Turtle/n(4) Seal/n(5) Bird/n(6) '
                     'Board').strip()
     if feature == '1':
@@ -96,12 +109,12 @@ def get_feature():
 
 
 def get_num(chosen_feature, token_bank):
-    '''
+    """
     Gets input of what number of the token feature they are buying for Sandy
     TODO Docstring
     :param chosen_feature:
-    :return:
-    '''
+    :return: int
+    """
     print(f'Which token for {chosen_feature} are we buying?\n')
     #   TODO from the token bank exract all the tokens for the feature and list the numbers and their description
     for token in token_bank:
@@ -120,11 +133,11 @@ def get_num(chosen_feature, token_bank):
 
 
 def generate_bank():
-    '''
-    Generates a list of all the token types
-    TODO Docstring
-    :return:
-    '''
+    """
+    Generates a list of all the different research tokens
+    :return: list
+        Contains all the available research tokens
+    """
     plants1 = research_token('Plants', 1, 'Tectonic', None,
                              'When you place a 4th tree on an island, grow that island.')
 
