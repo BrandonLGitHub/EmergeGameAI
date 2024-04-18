@@ -3,6 +3,7 @@ from typing import Any
 
 # calculates the total score of the board
 def get_score(islands):
+    #   TODO impliment token scoring
     """
     Calculates the score of all islands.
 
