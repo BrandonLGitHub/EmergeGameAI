@@ -63,6 +63,7 @@ def buy_tokens(tokens_held, dice_count, token_bank):
         bought_token = extract_token(token_bank, feature, number)
         tokens_held.append(bought_token)
         dice_count -= 2
+    print('Less than two tokens remaining. Cannot purchase tokens\n')
     return tokens_held, dice_count
 
 
@@ -89,7 +90,7 @@ def get_feature():
     :return: str
         Chosen feature of the token
     """
-    feature = input('What feature token should I buy?/n(1) Plants/n(2) Crab/n(3) Turtle/n(4) Seal/n(5) Bird/n(6) '
+    feature = input('What feature token should I buy?\n(1) Plants\n(2) Crab\n(3) Turtle\n(4) Seal\n(5) Tectonic\n(6) Bird\n(7) '
                     'Board').strip()
     if feature == '1':
         return 'Plants'
@@ -100,8 +101,10 @@ def get_feature():
     elif feature == '4':
         return 'Seal'
     elif feature == '5':
-        return 'Bird'
+        return 'Tectonic'
     elif feature == '6':
+        return 'Bird'
+    elif feature == '7':
         return 'Board'
     else:
         print('Invalid response please enter 1, 2, 3, 4, 5, or 6\n')
@@ -115,7 +118,7 @@ def get_num(chosen_feature, token_bank):
     :param chosen_feature:
     :return: int
     """
-    print(f'Which token for {chosen_feature} are we buying?\n')
+    print(f'Which token for the {chosen_feature} feature are we buying?\n')
     #   TODO from the token bank exract all the tokens for the feature and list the numbers and their description
     for token in token_bank:
         if token.feature == chosen_feature:
