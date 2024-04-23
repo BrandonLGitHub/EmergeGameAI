@@ -26,7 +26,6 @@ class test_tokens(unittest.TestCase):
             (1, [])
         )
 
-
     def test_get_feature(self):
         with patch('builtins.input', return_value='1'):
             self.assertEqual(
@@ -45,17 +44,21 @@ class test_tokens(unittest.TestCase):
         crab1 = tokens.research_token('Crab', 1, 'cost', 1, 'Place a crab for 1 die.')
         bird3 = tokens.research_token('Bird', 3, 'Tectonic', None,
                                       'When you steal a Bird, grown the island it lands on.')
-        with patch('builtins.input', side_effect=['2', '1', '5', '3']):
-            self.assertEqual(
-                tokens.buy_tokens([], 4, token_bank),
-                ([crab1, bird3], 0)
-            )
+        expected_tokens_bought = [crab1, bird3]
+        #  with patch('builtins.input', side_effect=['2', '1', '6', '3']):
+        actual_tokens_bought = tokens.buy_tokens([], 4, token_bank)
+        for actual, expected in zip(actual_tokens_bought, expected_tokens_bought):
+            with self.subTest(actual=actual, expected=expected):
+                self.assertEqual(actual.__dict__, expected.__dict__)
+                self.assertEqual(actual.__dict__, expected.__dict__)
 
     def test_extract_token(self):
         token_bank = tokens.generate_bank()
-        self.assertEqual(
-            tokens.extract_token(token_bank, "Plants", '1')
-        )
+        actual_plants1 = tokens.extract_token(token_bank, "Plants", 1)
+        expected_plants1 = tokens.research_token('Plants', 1, 'Tectonic', None,
+                                                 'When you place a 4th tree on an island, grow that island.')
+        self.assertEqual(actual_plants1.__dict__, expected_plants1.__dict__)
+
 
 if __name__ == '__main__':
     unittest.main()

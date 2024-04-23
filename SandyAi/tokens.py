@@ -64,7 +64,7 @@ def buy_tokens(tokens_held, dice_count, token_bank):
         tokens_held.append(bought_token)
         dice_count -= 2
     print('Less than two tokens remaining. Cannot purchase tokens\n')
-    return tokens_held, dice_count
+    return tokens_held
 
 
 def extract_token(token_bank, chosen_feature, chosen_num):
