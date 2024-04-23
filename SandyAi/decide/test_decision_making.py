@@ -108,15 +108,18 @@ class test_decision_making(unittest.TestCase):
         )
 
     def test_spend_dice(self):
+        islands = {
+            1: {'Plants': 1, 'Crab': 0, 'Turtle': 0, 'Seal': 0, 'Tectonic': 2, 'Bird': 0},
+            2: {'Plants': 2, 'Crab': 1, 'Turtle': 0, 'Seal': 0, 'Tectonic': 1, 'Bird': 1}
+        }
+        modifiers = {'Plants': [1], 'Crab': [2], 'Turtle': [], 'Seal': [], 'Tectonic': [5, 4], 'Bird': [6, 3]}
+        dice = {'dice_amt': 8,
+                'roll_result': [5, 4, 5, 6, 6, 3, 1, 3],
+                'saved_dice': []}
         self.assertEqual(
             dm.spend_dice(
-                {
-                    1: {'Plants': 1, 'Crab': 0, 'Turtle': 0, 'Seal': 0, 'Tectonic': 2, 'Bird': 0},
-                    2: {'Plants': 2, 'Crab': 1, 'Turtle': 0, 'Seal': 0, 'Tectonic': 1, 'Bird': 1}
-                }, {'Plants': [1], 'Crab': [2], 'Turtle': [], 'Seal': [], 'Tectonic': [5, 4], 'Bird': [6, 3]},
-                {'dice_amt': 8,
-                 'roll_result': [5, 4, 5, 6, 6, 3, 1, 3],
-                 'saved_dice': []}, 0, None
+                islands, modifiers,
+                dice, 0, None
             ), (
                 {
                     1: {'Plants': 2, 'Crab': 0, 'Turtle': 0, 'Seal': 0, 'Tectonic': 2, 'Bird': 1},

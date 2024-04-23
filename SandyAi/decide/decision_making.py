@@ -56,7 +56,9 @@ def spend_dice(islands, modifiers, dice, land_birds, tokens_held):
             print(f'\nI spent my dice on the {feature} feature for island number {island}!')
             print("That's the end of my turn. Let me know when you have completed yours.\n")
             player_turn()
-    saved_dice = budget['dice_hand']
+    #   TODO save dice
+    saved_dice = []
+    tokens_held = tokens.buy_tokens(tokens_held, dice['dice_amt'])
     return islands, land_birds, saved_dice, tokens_held
 
 
@@ -139,9 +141,6 @@ def update_board(feature, island, islands, land_birds_count=0, tokens_held=None)
                 land_birds_count -= 1
             if islands[island]['Plants'] < 4:
                 islands[island]['Plants'] += 1
-        if feature == 'Tectonic' and islands[island]['Tectonic'] == 0:
-            tokens_held = tokens.buy_tokens(0)  # TODO once token system is working
-
     return islands, land_birds_count, tokens_held
 
 
@@ -256,9 +255,7 @@ def check_cost(feature, island, islands, land_birds, tokens_held = None):
 
     """
     #   checks to see if there is a research token that would change the price
-    #   TODO Token system
-    #   cost = tokens.use_token(tokens_held, feature)
-    cost = None
+    cost, tokens_held = tokens.use_token(tokens_held, feature, 'cost')
     #   dictionary establishing the price of features that do no change based off board status
     fxd_prices = {'Crab': 2, 'Turtle': 3, 'Seal': 4}
     #   checks the price if there was no token applicable
