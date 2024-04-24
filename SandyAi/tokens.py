@@ -90,8 +90,8 @@ def get_feature():
     :return: str
         Chosen feature of the token
     """
-    feature = input('What feature token should I buy?\n(1) Plants\n(2) Crab\n(3) Turtle\n(4) Seal\n(5) Tectonic\n(6) Bird\n(7) '
-                    'Board').strip()
+    feature = input('What feature token should I buy?\n(1) Plants\n(2) Crab\n(3) Turtle\n(4) Seal\n(5) Tectonic\n(6) '
+                    'Bird\n(7) Board\n').strip()
     if feature == '1':
         return 'Plants'
     elif feature == '2':
