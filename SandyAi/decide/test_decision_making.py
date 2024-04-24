@@ -1,5 +1,6 @@
 import unittest
 import decision_making as dm
+import SandyAi.tokens as tokens
 
 
 class test_decision_making(unittest.TestCase):
@@ -34,6 +35,7 @@ class test_decision_making(unittest.TestCase):
         )
 
     def test_check_cost(self):
+        bird1 = tokens.research_token('Bird', 1, 'cost', 2, 'Steal a Bird for 2 dice.')
         self.assertEqual(
             dm.check_cost('Tectonic', 1,
                           {
@@ -41,8 +43,8 @@ class test_decision_making(unittest.TestCase):
                               2: {'Plants': 0, 'Crab': 0, 'Turtle': 0, 'Seal': 0, 'Tectonic': 1, 'Bird': 0},
                               3: {'Plants': 3, 'Crab': 1, 'Turtle': 0, 'Seal': 0, 'Tectonic': 2, 'Bird': 0},
                               4: {'Plants': 2, 'Crab': 1, 'Turtle': 1, 'Seal': 0, 'Tectonic': 1, 'Bird': 1},
-                          }, 2, None
-                          ), (4, None)
+                          }, 2, []
+                          ), (4, [])
         )
         self.assertEqual(
             dm.check_cost('Bird', 1,
@@ -51,8 +53,8 @@ class test_decision_making(unittest.TestCase):
                               2: {'Plants': 0, 'Crab': 0, 'Turtle': 0, 'Seal': 0, 'Tectonic': 1, 'Bird': 0},
                               3: {'Plants': 3, 'Crab': 1, 'Turtle': 0, 'Seal': 0, 'Tectonic': 2, 'Bird': 0},
                               4: {'Plants': 2, 'Crab': 1, 'Turtle': 1, 'Seal': 0, 'Tectonic': 1, 'Bird': 1},
-                          }, 2, None
-                          ), (2, None)
+                          }, 2, []
+                          ), (2, [])
         )
         self.assertEqual(
             dm.check_cost('Bird', 1,
@@ -61,8 +63,8 @@ class test_decision_making(unittest.TestCase):
                               2: {'Plants': 0, 'Crab': 0, 'Turtle': 0, 'Seal': 0, 'Tectonic': 1, 'Bird': 0},
                               3: {'Plants': 3, 'Crab': 1, 'Turtle': 0, 'Seal': 0, 'Tectonic': 2, 'Bird': 0},
                               4: {'Plants': 2, 'Crab': 1, 'Turtle': 1, 'Seal': 0, 'Tectonic': 1, 'Bird': 1},
-                          }, 0, None
-                          ), (3, None)
+                          }, 0, [bird1]
+                          ), (2, [])
         )
         self.assertEqual(
             dm.check_cost('Plants', 1,
@@ -71,11 +73,10 @@ class test_decision_making(unittest.TestCase):
                               2: {'Plants': 0, 'Crab': 0, 'Turtle': 0, 'Seal': 0, 'Tectonic': 1, 'Bird': 0},
                               3: {'Plants': 3, 'Crab': 1, 'Turtle': 0, 'Seal': 0, 'Tectonic': 2, 'Bird': 0},
                               4: {'Plants': 2, 'Crab': 1, 'Turtle': 1, 'Seal': 0, 'Tectonic': 1, 'Bird': 1},
-                          }, 2, None
-                          ), (2, None)
+                          }, 2, []
+                          ), (2, [])
         )
 
-        #   TODO add tests for tokens once that system is built out
 
     def test_update_board(self):
         dm.update_board('Crab', 1, {
@@ -116,15 +117,16 @@ class test_decision_making(unittest.TestCase):
         dice = {'dice_amt': 8,
                 'roll_result': [5, 4, 5, 6, 6, 3, 1, 3],
                 'saved_dice': []}
+        token_bank = tokens.generate_bank()
         self.assertEqual(
             dm.spend_dice(
                 islands, modifiers,
-                dice, 0, None
+                dice, 0, [], token_bank
             ), (
                 {
                     1: {'Plants': 2, 'Crab': 0, 'Turtle': 0, 'Seal': 0, 'Tectonic': 2, 'Bird': 1},
                     2: {'Plants': 2, 'Crab': 1, 'Turtle': 0, 'Seal': 0, 'Tectonic': 2, 'Bird': 1}
-                }, 0, [1, 3], None
+                }, 0, [], None
             )
         )
 

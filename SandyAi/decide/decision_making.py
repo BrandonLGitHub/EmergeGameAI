@@ -5,10 +5,12 @@ import sys
 
 
 #   Makes turn decisions based off available feature moves
-def spend_dice(islands, modifiers, dice, land_birds, tokens_held):
+def spend_dice(islands, modifiers, dice, land_birds, tokens_held, token_bank):
     """
     Purchases the features with the greatest point values that are afforable using the dice rolled
 
+    :param token_bank: list[research_token]
+        Holds all possible types of research tokens.
     :param islands: dict[int, dict[str, int]]
         Contains all the islands and their corresponding configurations.
     :param modifiers: dict[int, list[int]]
@@ -17,11 +19,11 @@ def spend_dice(islands, modifiers, dice, land_birds, tokens_held):
         Contains the dice remaining, int, the dice hand, list[], and saved dice, list[].
     :param land_birds: int
         Represents the number of birds on the mainland.
-    :param tokens_held: #TODO add tokens_held
+    :param tokens_held: list[research_token]
         Dictionary containing the tokens owned.
 
-    :return: tuple(dict[str, dict[str, int]], int, list[int], #TODO add tokens
-        Contains the updates islands, land_birds, saved dice, and token values
+    :return: tuple(dict[str, dict[str, int]], int, list[int], list[research_token])
+        Contains the updated islands, land_birds, saved dice, and token values
 
     :example:
 
@@ -48,17 +50,16 @@ def spend_dice(islands, modifiers, dice, land_birds, tokens_held):
     sorted_weights = forecasting.sort_weights(weights)
     budget = dice_budget(modifiers, dice['roll_result'], dice['dice_amt'])
     for feature, score, island in sorted_weights:
-        cost, token_cost = check_cost(feature, island, islands, land_birds, tokens_held)
+        cost, tokens_held = check_cost(feature, island, islands, land_birds, tokens_held)
         if affordability(feature, cost, budget):
-            tokens_held = token_cost
-            islands, land_birds, tokens_held = update_board(feature, island, islands, land_birds, tokens_held)
+            islands, land_birds= update_board(feature, island, islands, land_birds)
             budget = update_budget(feature, cost, budget, modifiers)
             print(f'\nI spent my dice on the {feature} feature for island number {island}!')
             print("That's the end of my turn. Let me know when you have completed yours.\n")
             player_turn()
     #   TODO save dice
     saved_dice = []
-    tokens_held = tokens.buy_tokens(tokens_held, dice['dice_amt'])
+    tokens_held = tokens.buy_tokens(tokens_held, budget['dice_remaining'], token_bank)
     return islands, land_birds, saved_dice, tokens_held
 
 
@@ -95,7 +96,7 @@ def affordability(feature, cost, budget):
 
 #   updates the board based off the feature move made
 #   TODO Test this function for island input
-def update_board(feature, island, islands, land_birds_count=0, tokens_held=None):
+def update_board(feature, island, islands, land_birds_count=0):
     """
     Update the board by selecting the specified island from the islands and incrementing the
     specified feature by 1
@@ -141,7 +142,7 @@ def update_board(feature, island, islands, land_birds_count=0, tokens_held=None)
                 land_birds_count -= 1
             if islands[island]['Plants'] < 4:
                 islands[island]['Plants'] += 1
-    return islands, land_birds_count, tokens_held
+    return islands, land_birds_count
 
 
 #   updates the budget based of the cost of a feature
