@@ -17,9 +17,9 @@ def game_runner():
     }
     land_birds = 4
     current_round = 0
-    tokens_held = None
-    #   TODO make into a class for dice hand?
-    dice: dict[str, list[Any] | int | Any] = {   #   make sure all uses of this are found
+    tokens_held = []
+    token_bank = tokens.generate_bank()
+    dice: dict[str, list[Any] | int | Any] = {
             'dice_amt': 6,
             'roll_result': [],
             'saved_dice': []
@@ -35,12 +35,11 @@ def game_runner():
         # sets dice based off of round number
         dice['dice_amt'] = dice_func.dice_count(current_round)
         dice['roll_result'] = dice_func.roll_dice(dice['dice_amt'], dice['saved_dice'])
-        islands, land_birds, dice['saved_dice'], tokens_held = dm.spend_dice(islands, modifiers, dice, land_birds, tokens_held)
-        #   TODO add below code once token systems is working
-        #   tokens_held, dice['saved_dice'] = tokens.buy_tokens(tokens_held, dice['saved_dice'])
+        islands, land_birds, dice['saved_dice'], tokens_held = dm.spend_dice(islands, modifiers, dice, land_birds,
+                                                                             tokens_held, token_bank)
         print(f'End of round {current_round}\n')
 
-    final_score = score.get_score(islands)
+    final_score = score.get_score(islands, tokens_held)
     print(f"Great game!!! My final score was {final_score}. I hope you had as much fun as I did. I'll be waiting for a "
           f"rematch!")
 
