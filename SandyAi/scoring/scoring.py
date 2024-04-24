@@ -2,11 +2,11 @@ from typing import Any
 
 
 # calculates the total score of the board
-def get_score(islands):
-    #   TODO impliment token scoring
+def get_score(islands, tokens_held):
     """
     Calculates the score of all islands.
 
+    :param tokens_held:
     :param islands: dict[int: dict[str: int]]
         dictionary containing all the island configurations.
 
@@ -27,6 +27,7 @@ def get_score(islands):
     score = 0
     for island, features in islands.items():
         score += island_score(features)
+    score += len(tokens_held)
     return score
 
 
